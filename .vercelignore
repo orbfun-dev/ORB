@@ -1,0 +1,25 @@
+# Vercel CLI does not read .gitignore — mirror the sensitive/heavyweight
+# exclusions here so uploads stay small and keypairs never leave the machine.
+# node_modules/ is always ignored by the CLI itself.
+
+# Rust build artifacts (17 GB locally; never needed for the web build)
+target/
+.anchor/
+
+# Tooling session state
+.mimosa/
+
+# Local build output (regenerated on Vercel by the build command)
+apps/web/dist/
+packages/sdk/dist/
+packages/crank/dist/
+
+# Keypairs / local secrets
+scripts/local-demo/keys/
+scripts/devnet/keys/
+apps/crank/var/
+.env
+.env.*
+
+# Git internals (belt and braces; the CLI skips these itself)
+.git/

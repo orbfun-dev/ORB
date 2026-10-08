@@ -1,0 +1,6462 @@
+{
+  "address": "G5yNWmzSPVozbXSj2Muv4pV8AbVwTHhJfL6nfWyAC48R",
+  "metadata": {
+    "name": "orbit_jackpot",
+    "version": "0.1.0",
+    "spec": "0.1.0"
+  },
+  "instructions": [
+    {
+      "name": "accept_admin",
+      "docs": [
+        "Pending admin: accepts the seat and clears the staging slot."
+      ],
+      "discriminator": [
+        112,
+        42,
+        45,
+        90,
+        116,
+        181,
+        13,
+        170
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "pending",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "admin_sweep_fees",
+      "docs": [
+        "Treasury authority: sweeps accrued fees to a destination wallet."
+      ],
+      "discriminator": [
+        246,
+        130,
+        220,
+        148,
+        243,
+        79,
+        135,
+        30
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  114,
+                  101,
+                  97,
+                  115,
+                  117,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury_authority",
+          "signer": true
+        },
+        {
+          "name": "destination",
+          "writable": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "cancel_round",
+      "docs": [
+        "Permissionless: cancels a round whose randomness reveal timed out."
+      ],
+      "discriminator": [
+        82,
+        70,
+        134,
+        54,
+        46,
+        96,
+        148,
+        8
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Permissionless crank caller; plays no role in the outcome (I13)."
+          ],
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "randomness_account",
+          "docs": [
+            "AUDIT P-1: the round's pinned randomness account. A revealed value",
+            "means the outcome is public — the round must settle, never cancel",
+            "(otherwise every loser races `fulfill_settle` with a cancel that",
+            "voids the winner). A CLOSED account (no longer owned by the oracle",
+            "program) cannot reveal anymore, so cancelling stays allowed and an",
+            "orphaned pin can always be refunded.",
+            "",
+            "",
+            "Randomness fallback: may also be the `EntropyChain` singleton",
+            "(writable: a cancel releases the chain's pending round). The source",
+            "is classified from the account itself (`classify_pinned`), never from",
+            "config, so a provider switch cannot turn a revealed account into a",
+            "\"closed\" one.",
+            "",
+            "classified and parsed there."
+          ],
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claim_winnings",
+      "docs": [
+        "Permissionless: O(1) membership proof; pays `entry.player`."
+      ],
+      "discriminator": [
+        161,
+        215,
+        24,
+        59,
+        14,
+        236,
+        242,
+        221
+      ],
+      "accounts": [
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "docs": [
+            "The entry claiming to contain the winning ticket, pinned by seeds to",
+            "`(round.round_id, entry_index)` — an entry from another round or",
+            "index cannot be presented. Retained after the claim (the roadmap's",
+            "`close_entry` reclaims its rent later; it refuses to close the winning",
+            "entry before the prize is claimed, which is exactly why claim must",
+            "not consume it)."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              },
+              {
+                "kind": "arg",
+                "path": "entry_index"
+              }
+            ]
+          }
+        },
+        {
+          "name": "player",
+          "docs": [
+            "`entry.player` so the payout cannot be diverted."
+          ],
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Permissionless submitter; receives nothing (I13)."
+          ],
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "event_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  95,
+                  95,
+                  101,
+                  118,
+                  101,
+                  110,
+                  116,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "entry_index",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "close_entry",
+      "docs": [
+        "Permissionless: reclaims a settled round's entry rent for its player."
+      ],
+      "discriminator": [
+        132,
+        26,
+        202,
+        145,
+        190,
+        37,
+        114,
+        67
+      ],
+      "accounts": [
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              },
+              {
+                "kind": "arg",
+                "path": "entry_index"
+              }
+            ]
+          }
+        },
+        {
+          "name": "player",
+          "docs": [
+            "`entry.player` so the refund and reclaimed rent cannot be diverted."
+          ],
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Permissionless crank caller; receives nothing (I13)."
+          ],
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "entry_index",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "close_randomness",
+      "docs": [
+        "Permissionless: once a round is terminal, closes its Switchboard",
+        "randomness account + reward escrow (round PDA signs) so the rent",
+        "rides `close_round` back to the opener instead of stranding."
+      ],
+      "discriminator": [
+        248,
+        16,
+        83,
+        7,
+        191,
+        133,
+        175,
+        172
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "docs": [
+            "The authority of the randomness account; receives the reclaimed",
+            "lamports, which `close_round` later forwards to `rent_payer`."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "randomness_account",
+          "docs": [
+            "by the configured oracle program — or already closed (handler)."
+          ],
+          "writable": true
+        },
+        {
+          "name": "reward_escrow",
+          "docs": [
+            "and closes it inside the CPI."
+          ],
+          "writable": true
+        },
+        {
+          "name": "program_state"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "wrapped_sol_mint"
+        },
+        {
+          "name": "lut",
+          "docs": [
+            "it from the randomness account's stored `lut_slot`."
+          ],
+          "writable": true
+        },
+        {
+          "name": "lut_signer"
+        },
+        {
+          "name": "address_lookup_table_program",
+          "address": "AddressLookupTab1e1111111111111111111111111"
+        },
+        {
+          "name": "switchboard_program"
+        },
+        {
+          "name": "crank",
+          "docs": [
+            "Permissionless caller; pays only the transaction fee."
+          ],
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "close_round",
+      "docs": [
+        "Permissionless: closes a fully drained and pruned round."
+      ],
+      "discriminator": [
+        149,
+        14,
+        81,
+        88,
+        230,
+        226,
+        234,
+        37
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mega_pot",
+          "docs": [
+            "Dust sink: the one residual destination that keeps stranded lamports",
+            "inside the game."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  103,
+                  97,
+                  95,
+                  112,
+                  111,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "destination",
+          "docs": [
+            "this round's rent at `open_round`, or `config.admin` for rounds",
+            "opened before Phase 12. Constrained, so a crank cannot redirect it."
+          ],
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Permissionless crank caller; receives nothing (I13)."
+          ],
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "commit_randomness",
+      "docs": [
+        "Permissionless: the round PDA commits its pinned randomness account",
+        "via the Switchboard `randomness_commit` CPI (exactly-once)."
+      ],
+      "discriminator": [
+        146,
+        52,
+        195,
+        220,
+        79,
+        30,
+        53,
+        26
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "randomness_account",
+          "docs": [
+            "The exact account pinned by `request_randomness`. Its owner is",
+            "constrained to the configured oracle program; key equality against",
+            "the pin, the authority binding and the unrevealed precondition are",
+            "checked in the handler. The oracle program writes the commit below.",
+            "",
+            "in the handler against the round's write-once pin."
+          ],
+          "writable": true
+        },
+        {
+          "name": "queue",
+          "docs": [
+            "The queue pinned in `config.oracle_queue`. Switchboard itself",
+            "re-verifies the oracle's queue membership inside the CPI; pinning",
+            "the key here removes the crank's freedom to aim commits at a",
+            "different queue.",
+            "",
+            "queue is verified in the handler."
+          ]
+        },
+        {
+          "name": "oracle",
+          "docs": [
+            "liveness are the Switchboard program's own checks inside the CPI.",
+            "Writable because `randomness_commit` bumps the oracle's stats — the",
+            "vendored crate's metas carry it as `AccountMeta::new`."
+          ],
+          "writable": true
+        },
+        {
+          "name": "recent_slothashes",
+          "address": "SysvarS1otHashes111111111111111111111111111"
+        },
+        {
+          "name": "switchboard_program"
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Permissionless crank caller (I13); plays no role in the outcome."
+          ],
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "crank_auto_deposit",
+      "docs": [
+        "Permissionless: enters a funded escrow into an open round, paying",
+        "the stake (to the vault), the entry rent and the crank tip (to the",
+        "caller) all out of the escrow. The minted entry's `player` is the",
+        "escrow PDA."
+      ],
+      "discriminator": [
+        3,
+        250,
+        223,
+        162,
+        124,
+        202,
+        113,
+        175
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "docs": [
+            "Same index-unforgeability as `deposit`: the seed is derived from",
+            "`round.entry_count` itself, and `init` refuses an existing account,",
+            "so index collisions (a human deposit landing mid-flight) fail",
+            "cleanly for the caller to retry with fresh indices."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              },
+              {
+                "kind": "account",
+                "path": "round.entry_count",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "docs": [
+            "Bound by its own `owner` field (see module docs): the seed check",
+            "alone would accept any PDA of the form [\"escrow\", x] — this pins x",
+            "to the account's self-declared owner, so the escrow presented is",
+            "exactly the escrow that will be debited."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "escrow.owner",
+                "account": "PlayerEscrow"
+              }
+            ]
+          }
+        },
+        {
+          "name": "crank",
+          "docs": [
+            "The permissionless crank. Pays the entry rent during `init` and is",
+            "reimbursed `entry_rent + tip` from the escrow below (R2); with any",
+            "tip above ~5_000 lamports the net `+tip − tx_fee` is positive, so",
+            "there is no configuration in which a stranger's entry costs the",
+            "keeper money. The owner signing here bypasses the window gate."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "create_randomness",
+      "docs": [
+        "Permissionless: births the round's Switchboard randomness account",
+        "via CPI — the round PDA signs as the account authority (the",
+        "deployed `randomness_init` demands the authority's signature)."
+      ],
+      "discriminator": [
+        38,
+        162,
+        107,
+        229,
+        152,
+        79,
+        208,
+        23
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "randomness",
+          "docs": [
+            "The fresh randomness account keypair — signs the transaction, is",
+            "written (created) by the oracle program through the CPI below.",
+            "",
+            "to establish inside the CPI."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "queue",
+          "docs": [
+            "handler so a crank cannot aim creation at a foreign queue."
+          ]
+        },
+        {
+          "name": "payer",
+          "docs": [
+            "Permissionless crank caller; pays the account's creation rent (I13)."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "reward_escrow",
+          "writable": true
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "wrapped_sol_mint"
+        },
+        {
+          "name": "program_state"
+        },
+        {
+          "name": "lut_signer",
+          "docs": [
+            "program creates it inside the CPI; a fresh account's owner is the",
+            "System program, so no owner constraint is possible here). The oracle",
+            "program validates it inside the CPI."
+          ]
+        },
+        {
+          "name": "lut",
+          "writable": true
+        },
+        {
+          "name": "address_lookup_table_program",
+          "address": "AddressLookupTab1e1111111111111111111111111"
+        },
+        {
+          "name": "switchboard_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "recent_slot",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "deposit",
+      "docs": [
+        "The hot path: escrow native SOL, mint one entry and its ticket range."
+      ],
+      "discriminator": [
+        242,
+        35,
+        198,
+        137,
+        82,
+        225,
+        242,
+        182
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "docs": [
+            "A wrong `entry_index` is structurally unforgeable: the seed is",
+            "derived from `round.entry_count` itself (ADR-1), and `init` refuses",
+            "an existing account, so index collisions fail cleanly for the client",
+            "to retry."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              },
+              {
+                "kind": "account",
+                "path": "round.entry_count",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "docs": [
+            "The player profile (Phase 11.6, decision D1): created on the",
+            "first-ever bet, reused by every later one. `init_if_needed` is safe",
+            "for the same reason as in `init_or_deposit_escrow`: the seed",
+            "contains the SIGNER's key, so a different signer derives a",
+            "different PDA and cross-owner reinitialisation is structurally",
+            "impossible."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "player"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mega_pot",
+          "docs": [
+            "Fee sink for the one-time profile charge."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  103,
+                  97,
+                  95,
+                  112,
+                  111,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "player",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "drain_mega_pot_v1_preflight",
+      "docs": [
+        "Admin, one-shot preflight: pays the pre-v2 Mega-Pot out to the",
+        "treasury so the migration's `accrued_lamports == 0` guard is",
+        "satisfied honestly (under v1 odds the pot can never reach 0 by",
+        "itself). Refuses once `economics_version >= 2` or any round is in",
+        "flight."
+      ],
+      "discriminator": [
+        103,
+        92,
+        82,
+        46,
+        101,
+        251,
+        36,
+        114
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mega_pot",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  103,
+                  97,
+                  95,
+                  112,
+                  111,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  114,
+                  101,
+                  97,
+                  115,
+                  117,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "fulfill_settle",
+      "docs": [
+        "Permissionless crank: resolves the winning ticket and moves the cuts."
+      ],
+      "discriminator": [
+        120,
+        171,
+        115,
+        5,
+        75,
+        67,
+        187,
+        67
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  114,
+                  101,
+                  97,
+                  115,
+                  117,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mega_pot",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  103,
+                  97,
+                  95,
+                  112,
+                  111,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "randomness_account",
+          "docs": [
+            "The exact account pinned at request time: a Switchboard randomness",
+            "account, or the `EntropyChain` singleton (writable: settle clears its",
+            "`value_round`). Key equality with the pin, the source classification",
+            "(`classify_pinned`), authority binding, reveal state and freshness",
+            "are all checked in the handler.",
+            ""
+          ],
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Permissionless crank caller (I13); receives the keeper tip, which is",
+            "paid out of the 1% admin cut — never a fourth slice."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "event_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  95,
+                  95,
+                  101,
+                  118,
+                  101,
+                  110,
+                  116,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_or_deposit_escrow",
+      "docs": [
+        "Player: funds (or re-funds) their escrow and declares its",
+        "auto-deposit terms; `amount == 0` changes terms only."
+      ],
+      "discriminator": [
+        170,
+        171,
+        45,
+        111,
+        13,
+        51,
+        16,
+        213
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mega_pot",
+          "docs": [
+            "Fee sink for the one-time profile charge (Phase 11.6, decision D1)."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  103,
+                  97,
+                  95,
+                  112,
+                  111,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "per_round_lamports",
+          "type": "u64"
+        },
+        {
+          "name": "max_rounds",
+          "type": "u32"
+        },
+        {
+          "name": "auto_reinvest",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "initialize",
+      "docs": [
+        "One-time program setup; a second call cannot reach the handler."
+      ],
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  114,
+                  101,
+                  97,
+                  115,
+                  117,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mega_pot",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  103,
+                  97,
+                  95,
+                  112,
+                  111,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "InitializeArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "lock_round",
+      "docs": [
+        "Permissionless crank: closes the deposit window (or auto-cancels)."
+      ],
+      "discriminator": [
+        68,
+        124,
+        43,
+        230,
+        30,
+        44,
+        248,
+        227
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Permissionless crank caller; plays no role in the outcome (I13)."
+          ],
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "migrate_economics_v2",
+      "docs": [
+        "Admin, one-way: retunes the economics to the v2 partial-loss model",
+        "(ADR-11). Refuses while the Mega-Pot holds lamports or any round is",
+        "in flight; after the latch, economics are immutable again."
+      ],
+      "discriminator": [
+        180,
+        201,
+        182,
+        173,
+        110,
+        223,
+        239,
+        83
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mega_pot",
+          "docs": [
+            "Read-only: the guard refuses to retune odds while the pot still",
+            "holds lamports contributed under them (see guard 2)."
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  103,
+                  97,
+                  95,
+                  112,
+                  111,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "docs": [
+            "Reserved by the cutover checklist for post-migration verification;",
+            "the latch itself moves no lamports."
+          ],
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "MigrateEconomicsV2Args"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "migrate_economics_v3",
+      "docs": [
+        "Admin, one-way: v2 → v3 settlement (the rake falls on the losers'",
+        "money only; `fulfill_settle` then requires the winning entry)."
+      ],
+      "discriminator": [
+        1,
+        108,
+        77,
+        52,
+        81,
+        229,
+        210,
+        66
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "open_round",
+      "docs": [
+        "Permissionless: opens round `next_round_id` once no round is `Open`."
+      ],
+      "discriminator": [
+        66,
+        235,
+        123,
+        240,
+        8,
+        35,
+        185,
+        159
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "config.next_round_id",
+                "account": "GlobalConfig"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "config.next_round_id",
+                "account": "GlobalConfig"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "docs": [
+            "Permissionless crank caller; plays no role in the outcome (I13)."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "previous_round",
+          "docs": [
+            "The active round, when any round has ever been opened. Deliberately",
+            "the LAST field: anchor assigns accounts sequentially, so an",
+            "`Option<Account>` is only omissible at the tail — clients simply stop",
+            "the account list here for the very first round. It cannot carry a",
+            "seed constraint (the account legitimately does not exist yet), so it",
+            "is bound to `config.active_round_id` in the handler — a program-owned",
+            "`Account<Round>` cannot be forged off-PDA, and the round-id field",
+            "check pins it to the exact round.",
+            ""
+          ],
+          "optional": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "refund_entry",
+      "docs": [
+        "Permissionless: refunds one entry of a cancelled round in full."
+      ],
+      "discriminator": [
+        214,
+        5,
+        136,
+        23,
+        253,
+        7,
+        230,
+        81
+      ],
+      "accounts": [
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "entry",
+          "docs": [
+            "The entry being refunded, pinned by seeds to",
+            "`(round.round_id, entry_index)` — an entry from another round or",
+            "index cannot be presented. `close = player` returns the entry's rent",
+            "to the player at instruction exit."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              },
+              {
+                "kind": "arg",
+                "path": "entry_index"
+              }
+            ]
+          }
+        },
+        {
+          "name": "player",
+          "docs": [
+            "`entry.player` so refunds and reclaimed rent cannot be diverted."
+          ],
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Permissionless crank caller; plays no role in the outcome (I13)."
+          ],
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "entry_index",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "request_entropy",
+      "docs": [
+        "Permissionless: pins a Locked round to the entropy chain and fixes",
+        "its target slot (only while the configured provider is Entropy)."
+      ],
+      "discriminator": [
+        230,
+        108,
+        26,
+        204,
+        175,
+        143,
+        241,
+        43
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "chain",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  114,
+                  111,
+                  112,
+                  121,
+                  95,
+                  99,
+                  104,
+                  97,
+                  105,
+                  110
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Permissionless crank caller; plays no role in the outcome (I13)."
+          ],
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "request_randomness",
+      "docs": [
+        "Permissionless: pins the round's randomness account (write-once)."
+      ],
+      "discriminator": [
+        213,
+        5,
+        173,
+        166,
+        37,
+        236,
+        31,
+        18
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "randomness_account",
+          "docs": [
+            "The randomness account to pin. Its owner is constrained to the",
+            "configured oracle program; its `authority` must equal the round PDA",
+            "(checked in the handler against the parsed account).",
+            "",
+            "settlement will only ever accept this exact account."
+          ]
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Permissionless crank caller; plays no role in the outcome (I13)."
+          ],
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "reveal_entropy",
+      "docs": [
+        "Reveals the next hash-chain seed for the pending entropy round and",
+        "fixes its value from the target slot's hash."
+      ],
+      "discriminator": [
+        112,
+        157,
+        174,
+        123,
+        233,
+        83,
+        16,
+        238
+      ],
+      "accounts": [
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "chain",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  114,
+                  111,
+                  112,
+                  121,
+                  95,
+                  99,
+                  104,
+                  97,
+                  105,
+                  110
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "slot_hashes",
+          "docs": [
+            "(it is too large for `Sysvar` deserialization)."
+          ],
+          "address": "SysvarS1otHashes111111111111111111111111111"
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "seed",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "reveal_randomness",
+      "docs": [
+        "Permissionless: publishes the oracle gateway's TEE-signed reveal",
+        "via the `randomness_reveal` CPI (round PDA signs; exactly-once)."
+      ],
+      "discriminator": [
+        30,
+        130,
+        85,
+        220,
+        208,
+        80,
+        28,
+        169
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "randomness_account",
+          "docs": [
+            "The exact account pinned by `request_randomness`. Its owner is",
+            "constrained to the configured oracle program; key equality, pin",
+            "binding, commit state and reveal-once are checked in the handler.",
+            "",
+            "the handler against the round's write-once pin."
+          ],
+          "writable": true
+        },
+        {
+          "name": "oracle",
+          "docs": [
+            "commit (handler, against the parsed account)."
+          ]
+        },
+        {
+          "name": "queue",
+          "docs": [
+            "handler."
+          ]
+        },
+        {
+          "name": "stats",
+          "docs": [
+            "key-checked in the handler."
+          ],
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "docs": [
+            "Permissionless crank caller; pays the reveal reward (I13)."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "recent_slothashes",
+          "address": "SysvarS1otHashes111111111111111111111111111"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "reward_escrow",
+          "writable": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "wrapped_sol_mint"
+        },
+        {
+          "name": "program_state"
+        },
+        {
+          "name": "switchboard_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "RevealRandomnessArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_entropy_chain",
+      "docs": [
+        "Admin: create or rotate the self-hosted entropy hash chain",
+        "(randomness fallback). Refused while a round is in flight on it."
+      ],
+      "discriminator": [
+        188,
+        168,
+        198,
+        182,
+        41,
+        228,
+        191,
+        35
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "chain",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  114,
+                  111,
+                  112,
+                  121,
+                  95,
+                  99,
+                  104,
+                  97,
+                  105,
+                  110
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "commit",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "length",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "sweep_unclaimed_prize",
+      "docs": [
+        "Permissionless: routes a lapsed unclaimed prize into the Mega-Pot."
+      ],
+      "discriminator": [
+        114,
+        206,
+        164,
+        74,
+        204,
+        192,
+        133,
+        56
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "round_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.round_id",
+                "account": "Round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mega_pot",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  103,
+                  97,
+                  95,
+                  112,
+                  111,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Permissionless crank caller; plays no role in the outcome (I13)."
+          ],
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "toggle_pause",
+      "docs": [
+        "Admin: toggles the pause brake (blocks deposit/open_round only)."
+      ],
+      "discriminator": [
+        238,
+        237,
+        206,
+        27,
+        255,
+        95,
+        123,
+        229
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "transfer_admin",
+      "docs": [
+        "Admin: stages a successor admin (step one of two)."
+      ],
+      "discriminator": [
+        42,
+        242,
+        66,
+        106,
+        228,
+        10,
+        111,
+        156
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "new_admin",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "update_config",
+      "docs": [
+        "Admin: updates operational parameters; economics are structurally",
+        "absent from the args (ADR-10)."
+      ],
+      "discriminator": [
+        29,
+        158,
+        252,
+        191,
+        10,
+        83,
+        219,
+        99
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "UpdateConfigArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "withdraw_escrow",
+      "docs": [
+        "Player: withdraws spendable escrow lamports to their wallet. Not",
+        "pause-gated — a fund exit keeps maximum liveness."
+      ],
+      "discriminator": [
+        81,
+        84,
+        226,
+        128,
+        245,
+        47,
+        96,
+        104
+      ],
+      "accounts": [
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "EntropyChain",
+      "discriminator": [
+        248,
+        97,
+        2,
+        58,
+        174,
+        76,
+        253,
+        0
+      ]
+    },
+    {
+      "name": "GlobalConfig",
+      "discriminator": [
+        149,
+        8,
+        156,
+        202,
+        160,
+        252,
+        176,
+        217
+      ]
+    },
+    {
+      "name": "MegaPotVault",
+      "discriminator": [
+        154,
+        134,
+        91,
+        158,
+        17,
+        206,
+        233,
+        146
+      ]
+    },
+    {
+      "name": "PlayerEntry",
+      "discriminator": [
+        158,
+        6,
+        39,
+        104,
+        234,
+        4,
+        153,
+        255
+      ]
+    },
+    {
+      "name": "PlayerEscrow",
+      "discriminator": [
+        85,
+        216,
+        69,
+        88,
+        110,
+        156,
+        8,
+        170
+      ]
+    },
+    {
+      "name": "Round",
+      "discriminator": [
+        87,
+        127,
+        165,
+        51,
+        73,
+        78,
+        116,
+        174
+      ]
+    },
+    {
+      "name": "RoundVault",
+      "discriminator": [
+        143,
+        169,
+        210,
+        32,
+        221,
+        123,
+        199,
+        119
+      ]
+    },
+    {
+      "name": "TreasuryVault",
+      "discriminator": [
+        86,
+        102,
+        19,
+        109,
+        56,
+        58,
+        144,
+        81
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "AccountOpened",
+      "discriminator": [
+        250,
+        89,
+        39,
+        67,
+        35,
+        119,
+        126,
+        63
+      ]
+    },
+    {
+      "name": "AutoDeposited",
+      "discriminator": [
+        179,
+        89,
+        190,
+        226,
+        98,
+        211,
+        4,
+        251
+      ]
+    },
+    {
+      "name": "ConfigUpdated",
+      "discriminator": [
+        40,
+        241,
+        230,
+        122,
+        11,
+        19,
+        198,
+        194
+      ]
+    },
+    {
+      "name": "Deposited",
+      "discriminator": [
+        111,
+        141,
+        26,
+        45,
+        161,
+        35,
+        100,
+        57
+      ]
+    },
+    {
+      "name": "EconomicsMigrated",
+      "discriminator": [
+        65,
+        141,
+        234,
+        56,
+        242,
+        91,
+        138,
+        5
+      ]
+    },
+    {
+      "name": "EntropyChainSet",
+      "discriminator": [
+        82,
+        6,
+        184,
+        3,
+        141,
+        35,
+        243,
+        190
+      ]
+    },
+    {
+      "name": "EntropyRevealed",
+      "discriminator": [
+        252,
+        143,
+        233,
+        248,
+        245,
+        161,
+        141,
+        48
+      ]
+    },
+    {
+      "name": "EntryRefundPaid",
+      "discriminator": [
+        111,
+        238,
+        73,
+        8,
+        144,
+        41,
+        240,
+        218
+      ]
+    },
+    {
+      "name": "EntryRefunded",
+      "discriminator": [
+        34,
+        82,
+        130,
+        116,
+        93,
+        139,
+        188,
+        234
+      ]
+    },
+    {
+      "name": "EscrowDepleted",
+      "discriminator": [
+        238,
+        135,
+        124,
+        76,
+        69,
+        229,
+        98,
+        22
+      ]
+    },
+    {
+      "name": "EscrowFunded",
+      "discriminator": [
+        228,
+        243,
+        166,
+        74,
+        22,
+        167,
+        157,
+        244
+      ]
+    },
+    {
+      "name": "EscrowWithdrawn",
+      "discriminator": [
+        43,
+        206,
+        174,
+        47,
+        105,
+        219,
+        216,
+        239
+      ]
+    },
+    {
+      "name": "FeesSwept",
+      "discriminator": [
+        96,
+        218,
+        115,
+        136,
+        74,
+        170,
+        202,
+        172
+      ]
+    },
+    {
+      "name": "MegaPotContribution",
+      "discriminator": [
+        205,
+        171,
+        81,
+        242,
+        63,
+        168,
+        71,
+        160
+      ]
+    },
+    {
+      "name": "MegaPotDrainedPreflight",
+      "discriminator": [
+        66,
+        104,
+        242,
+        232,
+        215,
+        236,
+        81,
+        228
+      ]
+    },
+    {
+      "name": "MegaPotTriggered",
+      "discriminator": [
+        91,
+        254,
+        225,
+        11,
+        42,
+        200,
+        166,
+        163
+      ]
+    },
+    {
+      "name": "OracleProviderChanged",
+      "discriminator": [
+        37,
+        100,
+        46,
+        52,
+        56,
+        152,
+        18,
+        38
+      ]
+    },
+    {
+      "name": "PauseToggled",
+      "discriminator": [
+        105,
+        215,
+        89,
+        53,
+        198,
+        232,
+        136,
+        161
+      ]
+    },
+    {
+      "name": "PrizeClaimed",
+      "discriminator": [
+        213,
+        150,
+        192,
+        76,
+        199,
+        33,
+        212,
+        38
+      ]
+    },
+    {
+      "name": "RandomnessCommitted",
+      "discriminator": [
+        125,
+        150,
+        46,
+        71,
+        102,
+        251,
+        253,
+        108
+      ]
+    },
+    {
+      "name": "RandomnessRequested",
+      "discriminator": [
+        10,
+        64,
+        183,
+        29,
+        104,
+        63,
+        90,
+        149
+      ]
+    },
+    {
+      "name": "RoundCancelled",
+      "discriminator": [
+        238,
+        141,
+        105,
+        175,
+        182,
+        158,
+        15,
+        7
+      ]
+    },
+    {
+      "name": "RoundDustSwept",
+      "discriminator": [
+        192,
+        102,
+        149,
+        202,
+        225,
+        253,
+        153,
+        177
+      ]
+    },
+    {
+      "name": "RoundLocked",
+      "discriminator": [
+        19,
+        58,
+        91,
+        157,
+        24,
+        76,
+        207,
+        7
+      ]
+    },
+    {
+      "name": "RoundOpened",
+      "discriminator": [
+        99,
+        173,
+        228,
+        72,
+        142,
+        57,
+        109,
+        178
+      ]
+    },
+    {
+      "name": "RoundSettled",
+      "discriminator": [
+        249,
+        225,
+        66,
+        54,
+        157,
+        200,
+        234,
+        222
+      ]
+    },
+    {
+      "name": "RoundWindowRolled",
+      "discriminator": [
+        254,
+        170,
+        58,
+        231,
+        218,
+        186,
+        178,
+        236
+      ]
+    },
+    {
+      "name": "UnclaimedPrizeSwept",
+      "discriminator": [
+        86,
+        76,
+        81,
+        204,
+        232,
+        39,
+        230,
+        201
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "UnauthorizedAdmin",
+      "msg": "this instruction requires the admin authority"
+    },
+    {
+      "code": 6001,
+      "name": "UnauthorizedPendingAdmin",
+      "msg": "this instruction requires the pending admin authority"
+    },
+    {
+      "code": 6002,
+      "name": "UnauthorizedTreasuryAuthority",
+      "msg": "this instruction requires the treasury authority"
+    },
+    {
+      "code": 6003,
+      "name": "Paused",
+      "msg": "the program is paused for this instruction"
+    },
+    {
+      "code": 6004,
+      "name": "AlreadyInitialized",
+      "msg": "global configuration is already initialized"
+    },
+    {
+      "code": 6005,
+      "name": "ImmutableField",
+      "msg": "the requested configuration field is immutable after initialize"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidFeeSplit",
+      "msg": "fee basis points must sum to exactly 10_000 (invariant I14)"
+    },
+    {
+      "code": 6007,
+      "name": "ZeroModulusConfig",
+      "msg": "mega trigger modulus must be at least 1"
+    },
+    {
+      "code": 6008,
+      "name": "InvalidRevealDeadline",
+      "msg": "randomness reveal deadline must be below the 512-slot retention bound"
+    },
+    {
+      "code": 6009,
+      "name": "InvalidDurationConfig",
+      "msg": "round durations are inconsistent with their configured ceiling"
+    },
+    {
+      "code": 6010,
+      "name": "InvalidOracleQueue",
+      "msg": "the oracle queue key must be a real account, never the default pubkey"
+    },
+    {
+      "code": 6011,
+      "name": "MockOracleForbidden",
+      "msg": "the mock oracle provider is forbidden in this build"
+    },
+    {
+      "code": 6012,
+      "name": "RoundAlreadyOpen",
+      "msg": "a round is already open; at most one round may be Open at a time"
+    },
+    {
+      "code": 6013,
+      "name": "PreviousRoundMismatch",
+      "msg": "the presented previous round does not match the active round id"
+    },
+    {
+      "code": 6014,
+      "name": "RoundNotOpen",
+      "msg": "the round is not in the Open state"
+    },
+    {
+      "code": 6015,
+      "name": "DepositWindowClosed",
+      "msg": "the deposit window has closed"
+    },
+    {
+      "code": 6016,
+      "name": "DepositBelowMinimum",
+      "msg": "deposit is below the configured minimum"
+    },
+    {
+      "code": 6017,
+      "name": "ZeroDepositAmount",
+      "msg": "deposit amount must be greater than zero"
+    },
+    {
+      "code": 6018,
+      "name": "MaxEntriesReached",
+      "msg": "the round has reached its configured maximum entry count"
+    },
+    {
+      "code": 6019,
+      "name": "LockWindowNotElapsed",
+      "msg": "the lock window has not yet elapsed"
+    },
+    {
+      "code": 6020,
+      "name": "RoundNotLocked",
+      "msg": "the round is not in the Locked state"
+    },
+    {
+      "code": 6021,
+      "name": "RoundNotAwaitingRandomness",
+      "msg": "the round is not in the AwaitingRandomness state"
+    },
+    {
+      "code": 6022,
+      "name": "RoundNotSettled",
+      "msg": "the round is not in the Settled state"
+    },
+    {
+      "code": 6023,
+      "name": "RoundNotCancelled",
+      "msg": "the round is not in the Cancelled state"
+    },
+    {
+      "code": 6024,
+      "name": "IllegalStateTransition",
+      "msg": "the requested state transition is illegal (invariant I12)"
+    },
+    {
+      "code": 6025,
+      "name": "RandomnessOwnerMismatch",
+      "msg": "the randomness account is owned by the wrong program"
+    },
+    {
+      "code": 6026,
+      "name": "RandomnessAuthorityMismatch",
+      "msg": "the randomness account authority is not the round PDA"
+    },
+    {
+      "code": 6027,
+      "name": "RandomnessAlreadyPinned",
+      "msg": "randomness has already been pinned for this round; no re-rolls"
+    },
+    {
+      "code": 6028,
+      "name": "RandomnessAccountMismatch",
+      "msg": "the randomness account key does not match the pinned account"
+    },
+    {
+      "code": 6029,
+      "name": "RandomnessMalformed",
+      "msg": "the randomness account data failed to parse as a committed account"
+    },
+    {
+      "code": 6030,
+      "name": "StaleRandomness",
+      "msg": "the randomness commit predates the lock; no depositing against a known outcome"
+    },
+    {
+      "code": 6031,
+      "name": "RandomnessNotRevealed",
+      "msg": "the randomness value has not been revealed yet"
+    },
+    {
+      "code": 6032,
+      "name": "RandomnessAlreadyCommitted",
+      "msg": "the randomness account has already been committed; commits are exactly-once"
+    },
+    {
+      "code": 6033,
+      "name": "RandomnessAlreadyRevealed",
+      "msg": "the randomness account has already been revealed"
+    },
+    {
+      "code": 6034,
+      "name": "RandomnessNotCommitted",
+      "msg": "the randomness account has not been committed yet"
+    },
+    {
+      "code": 6035,
+      "name": "RandomnessOracleMismatch",
+      "msg": "the presented oracle is not the one the commit assigned"
+    },
+    {
+      "code": 6036,
+      "name": "RandomnessStatsMismatch",
+      "msg": "the stats account is not the oracle program's stats PDA for this oracle"
+    },
+    {
+      "code": 6037,
+      "name": "RandomnessRevealMismatch",
+      "msg": "the value written by the reveal does not match the presented value"
+    },
+    {
+      "code": 6038,
+      "name": "RandomnessCreateFailed",
+      "msg": "the switchboard randomness_init invocation failed"
+    },
+    {
+      "code": 6039,
+      "name": "RandomnessRevealFailed",
+      "msg": "the switchboard randomness_reveal invocation failed"
+    },
+    {
+      "code": 6040,
+      "name": "RandomnessQueueMismatch",
+      "msg": "the queue account key does not match the configured oracle queue"
+    },
+    {
+      "code": 6041,
+      "name": "RandomnessProgramMismatch",
+      "msg": "the invoked switchboard program id does not match the configured oracle program"
+    },
+    {
+      "code": 6042,
+      "name": "RandomnessCommitFailed",
+      "msg": "the switchboard randomness_commit invocation failed"
+    },
+    {
+      "code": 6043,
+      "name": "RevealDeadlineNotElapsed",
+      "msg": "the randomness reveal deadline has not yet elapsed"
+    },
+    {
+      "code": 6044,
+      "name": "PrizeAlreadyClaimed",
+      "msg": "the prize has already been claimed"
+    },
+    {
+      "code": 6045,
+      "name": "EntryRoundMismatch",
+      "msg": "the entry belongs to a different round"
+    },
+    {
+      "code": 6046,
+      "name": "EntryNotWinning",
+      "msg": "the entry's ticket range does not contain the winning ticket"
+    },
+    {
+      "code": 6047,
+      "name": "EntryAlreadyClosed",
+      "msg": "the entry has already been refunded or closed"
+    },
+    {
+      "code": 6048,
+      "name": "RefundDestinationMismatch",
+      "msg": "the payout or refund destination must be the entry's player"
+    },
+    {
+      "code": 6049,
+      "name": "WinningEntryNotClaimed",
+      "msg": "the winning entry cannot close before its prize is claimed"
+    },
+    {
+      "code": 6050,
+      "name": "ClaimDeadlineNotElapsed",
+      "msg": "the claim deadline has not yet elapsed"
+    },
+    {
+      "code": 6051,
+      "name": "NothingToSweep",
+      "msg": "nothing to sweep: accrued lamports are zero"
+    },
+    {
+      "code": 6052,
+      "name": "VaultNotDrained",
+      "msg": "the round vault is not fully drained"
+    },
+    {
+      "code": 6053,
+      "name": "EntriesNotClosed",
+      "msg": "not all entries have been closed yet"
+    },
+    {
+      "code": 6054,
+      "name": "InvalidTicketTotal",
+      "msg": "total lamports must be greater than zero to resolve a ticket"
+    },
+    {
+      "code": 6055,
+      "name": "ArithmeticOverflow",
+      "msg": "checked arithmetic overflowed"
+    },
+    {
+      "code": 6056,
+      "name": "RoundVaultInvariant",
+      "msg": "round vault balance violates invariant I1"
+    },
+    {
+      "code": 6057,
+      "name": "TreasuryInvariant",
+      "msg": "treasury balances violate invariant I2 or I5"
+    },
+    {
+      "code": 6058,
+      "name": "MegaPotInvariant",
+      "msg": "mega-pot balances violate invariant I3 or I4"
+    },
+    {
+      "code": 6059,
+      "name": "SplitInvariant",
+      "msg": "the pot split violates invariant I6"
+    },
+    {
+      "code": 6060,
+      "name": "MegaSplitInvariant",
+      "msg": "the mega-pot split violates invariant I7"
+    },
+    {
+      "code": 6061,
+      "name": "VaultBelowRentExempt",
+      "msg": "the action would push a vault below its rent-exempt minimum"
+    },
+    {
+      "code": 6062,
+      "name": "AutoDepositDisabled",
+      "msg": "the auto-deposit feature is disabled in the global config"
+    },
+    {
+      "code": 6063,
+      "name": "AutoDepositWindowClosed",
+      "msg": "the auto-deposit window has closed for permissionless callers; only the escrow owner may act"
+    },
+    {
+      "code": 6064,
+      "name": "AutoDepositAlreadyThisRound",
+      "msg": "this escrow has already auto-deposited into this round or a newer one"
+    },
+    {
+      "code": 6065,
+      "name": "EscrowBudgetExhausted",
+      "msg": "the escrow's budget of rounds is exhausted"
+    },
+    {
+      "code": 6066,
+      "name": "EscrowInsufficientBalance",
+      "msg": "the escrow's spendable balance cannot cover stake plus entry rent plus tip"
+    },
+    {
+      "code": 6067,
+      "name": "EscrowOwnerMismatch",
+      "msg": "the escrow belongs to a different owner"
+    },
+    {
+      "code": 6068,
+      "name": "InvalidEscrowTerms",
+      "msg": "escrow terms are invalid: max_rounds must be positive and per_round at or above the minimum deposit"
+    },
+    {
+      "code": 6069,
+      "name": "NothingToWithdraw",
+      "msg": "withdrawal amount must be greater than zero"
+    },
+    {
+      "code": 6070,
+      "name": "InvalidAutoDepositWindow",
+      "msg": "the auto-deposit window must be positive and shorter than the round duration"
+    },
+    {
+      "code": 6071,
+      "name": "AutoDepositTipTooHigh",
+      "msg": "the auto-deposit tip exceeds the compile-time ceiling"
+    },
+    {
+      "code": 6072,
+      "name": "EscrowInvariant",
+      "msg": "escrow balance violates invariant I16 (rent exemption)"
+    },
+    {
+      "code": 6073,
+      "name": "RoundIdMismatch",
+      "msg": "the presented round does not match the instruction's round_id argument"
+    },
+    {
+      "code": 6074,
+      "name": "EconomicsAlreadyMigrated",
+      "msg": "economics_version is already at 2; the migration is a one-way latch"
+    },
+    {
+      "code": 6075,
+      "name": "MegaPotNotDrained",
+      "msg": "the Mega-Pot must be drained before economics can migrate"
+    },
+    {
+      "code": 6076,
+      "name": "RoundInFlight",
+      "msg": "a round is still in flight; economics can only migrate between rounds"
+    },
+    {
+      "code": 6077,
+      "name": "MegaFarmGuardViolated",
+      "msg": "the proposed mega payout cap violates the I21 farming guard"
+    },
+    {
+      "code": 6078,
+      "name": "RefundPoolExhausted",
+      "msg": "refunds_paid would exceed refund_pool (invariant I20)"
+    },
+    {
+      "code": 6079,
+      "name": "MegaFieldPoolExhausted",
+      "msg": "mega_field_paid would exceed mega_field_pool (invariant I20)"
+    },
+    {
+      "code": 6080,
+      "name": "RoundDustOutOfBounds",
+      "msg": "residual vault_owed exceeds the rounding-dust bound (invariant I22)"
+    },
+    {
+      "code": 6081,
+      "name": "AccountOpenFeeTooHigh",
+      "msg": "the account-open fee exceeds the compile-time ceiling"
+    },
+    {
+      "code": 6082,
+      "name": "MegaPotAlreadyDrained",
+      "msg": "the Mega-Pot holds nothing to drain (accrued_lamports is already 0)"
+    },
+    {
+      "code": 6083,
+      "name": "WinningEntryRequired",
+      "msg": "economics v3 settlement needs the winning entry as the first remaining account"
+    },
+    {
+      "code": 6084,
+      "name": "WinningEntryMismatch",
+      "msg": "the supplied entry is not this round's winning entry"
+    },
+    {
+      "code": 6085,
+      "name": "EconomicsVersionMismatch",
+      "msg": "economics can only advance to v3 from v2"
+    },
+    {
+      "code": 6086,
+      "name": "ConfigBelowMinimum",
+      "msg": "config value below its safety minimum"
+    },
+    {
+      "code": 6087,
+      "name": "OracleQueueChangeRequiresPause",
+      "msg": "the oracle queue can only change while the protocol is paused"
+    },
+    {
+      "code": 6088,
+      "name": "RandomnessNotClosed",
+      "msg": "close_randomness must reclaim the round's Switchboard accounts before close_round"
+    },
+    {
+      "code": 6089,
+      "name": "OracleProviderMismatch",
+      "msg": "this instruction does not match the configured randomness provider"
+    },
+    {
+      "code": 6090,
+      "name": "EntropyChainBusy",
+      "msg": "the entropy chain already has a round in flight or an unsettled value"
+    },
+    {
+      "code": 6091,
+      "name": "EntropyChainExhausted",
+      "msg": "the entropy chain has no seeds left; the admin must set a new chain"
+    },
+    {
+      "code": 6092,
+      "name": "InvalidEntropyCommit",
+      "msg": "the entropy commit must be non-zero and the chain length positive"
+    },
+    {
+      "code": 6093,
+      "name": "EntropyNotPending",
+      "msg": "this round is not the entropy chain's pending round"
+    },
+    {
+      "code": 6094,
+      "name": "EntropySeedMismatch",
+      "msg": "sha256(seed) does not match the entropy chain commit"
+    },
+    {
+      "code": 6095,
+      "name": "EntropyTargetNotReached",
+      "msg": "the entropy target slot has no hash yet"
+    },
+    {
+      "code": 6096,
+      "name": "EntropyTargetExpired",
+      "msg": "the entropy target slot left SlotHashes; the round can only cancel at its deadline"
+    }
+  ],
+  "types": [
+    {
+      "name": "AccountOpened",
+      "docs": [
+        "A player's `PlayerEscrow` profile was created and the one-time",
+        "`account_open_fee_lamports` seeded the Mega-Pot. Charged on top of",
+        "rent (recorded separately here) and exactly once per wallet across",
+        "both creation paths."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "rent_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "mega_pot_accrued_after",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AutoDeposited",
+      "docs": [
+        "A permissionless crank entered an escrow into a round: one entry minted",
+        "with `player = escrow`, the stake moved to the round vault, and the",
+        "entry rent + tip reimbursed to the crank out of the escrow."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "entry_index",
+            "type": "u32"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "tip",
+            "type": "u64"
+          },
+          {
+            "name": "entry_rent",
+            "type": "u64"
+          },
+          {
+            "name": "ticket_start",
+            "type": "u64"
+          },
+          {
+            "name": "ticket_end",
+            "type": "u64"
+          },
+          {
+            "name": "round_total",
+            "type": "u64"
+          },
+          {
+            "name": "rounds_remaining",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigUpdated",
+      "docs": [
+        "AUDIT P-3: every `update_config` emits the effective values of the",
+        "levers that matter to players, so indexers and players can see changes."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "round_duration_secs",
+            "type": "i64"
+          },
+          {
+            "name": "claim_deadline_secs",
+            "type": "i64"
+          },
+          {
+            "name": "min_deposit_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "keeper_tip_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "randomness_reveal_deadline_slots",
+            "type": "u64"
+          },
+          {
+            "name": "oracle_queue",
+            "type": "pubkey"
+          },
+          {
+            "name": "auto_deposit_tip_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "auto_deposit_enabled",
+            "type": "bool"
+          },
+          {
+            "name": "account_open_fee_lamports",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Deposited",
+      "docs": [
+        "A deposit minted one entry and its ticket range. `extended` is set when",
+        "the anti-snipe timer moved, so the UI can show the clock jumping rather",
+        "than appearing to freeze."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "entry_index",
+            "type": "u32"
+          },
+          {
+            "name": "player",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "ticket_start",
+            "type": "u64"
+          },
+          {
+            "name": "ticket_end",
+            "type": "u64"
+          },
+          {
+            "name": "round_total",
+            "type": "u64"
+          },
+          {
+            "name": "new_end_ts",
+            "type": "i64"
+          },
+          {
+            "name": "extended",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EconomicsMigrated",
+      "docs": [
+        "ADR-11: the one-way economics cutover ran. Carries every after value",
+        "(the immutable fee bps are restated for indexer convenience) and both",
+        "version numbers; `economics_version` can never move again."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "from_version",
+            "type": "u8"
+          },
+          {
+            "name": "to_version",
+            "type": "u8"
+          },
+          {
+            "name": "winner_bps",
+            "type": "u16"
+          },
+          {
+            "name": "refund_bps",
+            "type": "u16"
+          },
+          {
+            "name": "fee_bps_admin",
+            "type": "u16"
+          },
+          {
+            "name": "fee_bps_mega",
+            "type": "u16"
+          },
+          {
+            "name": "mega_award_bps",
+            "type": "u16"
+          },
+          {
+            "name": "mega_field_bps",
+            "type": "u16"
+          },
+          {
+            "name": "mega_trigger_modulus",
+            "type": "u32"
+          },
+          {
+            "name": "mega_payout_cap_bps",
+            "type": "u32"
+          },
+          {
+            "name": "account_open_fee_lamports",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntropyChain",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "commit",
+            "docs": [
+              "`sha256` of the next seed to be revealed."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "remaining",
+            "docs": [
+              "Seeds left in the current chain."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "pending_round",
+            "docs": [
+              "The round awaiting a reveal, or `ENTROPY_NONE`."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "target_slot",
+            "docs": [
+              "The slot whose hash the pending round will use (the first produced",
+              "slot at or after it)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "request_slot",
+            "docs": [
+              "When the pending round was requested."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "value",
+            "docs": [
+              "The last revealed value; meaningful only while `value_round` is set."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "value_round",
+            "docs": [
+              "The round `value` belongs to, until it settles; or `ENTROPY_NONE`."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "value_slot",
+            "docs": [
+              "The slot whose hash produced `value`."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "revealed_count",
+            "docs": [
+              "Lifetime reveals, for indexers."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "reserved",
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntropyChainSet",
+      "docs": [
+        "Randomness fallback: the admin set (or rotated) the entropy chain."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "commit",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "remaining",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntropyRevealed",
+      "docs": [
+        "Randomness fallback: a round's entropy was revealed. Carries every",
+        "input, so anyone can recompute `value` and check `sha256(seed)` against",
+        "the previous commit."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "seed",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "slot",
+            "type": "u64"
+          },
+          {
+            "name": "slot_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "value",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntryRefundPaid",
+      "docs": [
+        "A settled round paid one entry its pro-rata slice of `refund_pool` and",
+        "(on a trigger) `mega_field_pool` at `close_entry`. `close_entry` is",
+        "permissionless and pays `entry.player` — for auto-deposit players that",
+        "is the escrow PDA, so the refund lands where `auto_reinvest` can roll",
+        "it into the next round; for direct depositors it is the wallet."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "entry_index",
+            "type": "u32"
+          },
+          {
+            "name": "player",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "docs": [
+              "The entry's stake, for context."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "refund",
+            "docs": [
+              "Pro-rata share of `refund_pool`."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "mega_field",
+            "docs": [
+              "Pro-rata share of `mega_field_pool` (0 unless the round triggered)."
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntryRefunded",
+      "docs": [
+        "A cancelled round refunded one entry in full (ADR-7: fees are taken at",
+        "settlement only, so refunds are exact)."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "entry_index",
+            "type": "u32"
+          },
+          {
+            "name": "player",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EscrowDepleted",
+      "docs": [
+        "An escrow's budget ran dry (or its balance can no longer buy a round);",
+        "fired once so the UI and the keeper registry can demote it without",
+        "polling. The account survives — the owner can re-fund or withdraw."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          },
+          {
+            "name": "last_round_id",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EscrowFunded",
+      "docs": [
+        "An escrow was funded (or re-funded) and its terms set. The keeper's",
+        "event-sourced registry keys off this; a missed log is healed by the",
+        "next GPA reconciliation."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "per_round_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "max_rounds",
+            "type": "u32"
+          },
+          {
+            "name": "rounds_remaining",
+            "type": "u32"
+          },
+          {
+            "name": "auto_reinvest",
+            "type": "bool"
+          },
+          {
+            "name": "total_lamports",
+            "docs": [
+              "The escrow's post-call on-chain balance (rent floor included)."
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EscrowWithdrawn",
+      "docs": [
+        "The owner withdrew spendable escrow lamports to their wallet. Not",
+        "pause-gated and carries no config dependency — fund exits keep maximum",
+        "liveness."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "escrow",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "remaining",
+            "docs": [
+              "The escrow's post-withdrawal on-chain balance (rent floor included)."
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FeesSwept",
+      "docs": [
+        "The treasury authority swept accrued fees out of the treasury vault."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "destination",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GlobalConfig",
+      "docs": [
+        "Program-wide configuration, created once by `initialize`.",
+        "",
+        "Immutable after creation (ADR-10): `fee_bps_admin`, `fee_bps_mega`,",
+        "`winner_bps`, `mega_award_bps`, `mega_trigger_modulus`. An admin who can",
+        "retune jackpot odds mid-cycle can rug the progressive pot, so this must",
+        "be structurally impossible, not merely unauthorized. Everything else",
+        "stays admin-mutable; admin transfer is two-step via `pending_admin`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "pending_admin",
+            "docs": [
+              "Two-step handoff staging slot; `None` when no transfer is pending."
+            ],
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "treasury_authority",
+            "docs": [
+              "Fee-sweep destination authority; separate from `admin` for ops hygiene."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle_program_id",
+            "docs": [
+              "Pinned oracle program id; the randomness account's owner must match."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle_queue",
+            "docs": [
+              "Pinned Switchboard On-Demand queue; `commit_randomness` only ever",
+              "commits against this queue, so a crank cannot steer the round at a",
+              "different queue. Admin-mutable (queue migration is operational, not",
+              "economic — unlike `oracle_program_id`, which is immutable)."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_bps_admin",
+            "docs": [
+              "Admin cut, bps — **immutable**."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "fee_bps_mega",
+            "docs": [
+              "Mega-Pot cut, bps — **immutable**."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "winner_bps",
+            "docs": [
+              "Winner share, bps — **immutable**; the three must sum to 10_000 (I14)."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "mega_award_bps",
+            "docs": [
+              "Mega-Pot award on trigger, bps — **immutable**."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "mega_trigger_modulus",
+            "docs": [
+              "1-in-N trigger odds — **immutable**; must be ≥ 1."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "max_entries_per_round",
+            "docs": [
+              "`0` = unlimited entries."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "round_duration_secs",
+            "type": "i64"
+          },
+          {
+            "name": "max_round_duration_secs",
+            "docs": [
+              "Hard ceiling on anti-snipe extension."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "anti_snipe_window_secs",
+            "type": "i64"
+          },
+          {
+            "name": "anti_snipe_extension_secs",
+            "type": "i64"
+          },
+          {
+            "name": "claim_deadline_secs",
+            "docs": [
+              "After this, an unclaimed prize sweeps to the Mega-Pot."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "min_deposit_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "anti_snipe_min_deposit_lamports",
+            "docs": [
+              "Only deposits ≥ this extend the anti-snipe timer."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "keeper_tip_lamports",
+            "docs": [
+              "Paid out of the 1% admin cut — never a fourth slice."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "randomness_reveal_deadline_slots",
+            "docs": [
+              "Must stay < 512 (`SlotHashes` retention window)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "active_round_id",
+            "type": "u64"
+          },
+          {
+            "name": "next_round_id",
+            "docs": [
+              "Monotonic; ids are never reused."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "oracle_provider",
+            "type": {
+              "defined": {
+                "name": "OracleProvider"
+              }
+            }
+          },
+          {
+            "name": "paused",
+            "docs": [
+              "Blocks `deposit` and `open_round` only — never fund-exit paths."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "auto_deposit_window_secs",
+            "docs": [
+              "Permissionless `crank_auto_deposit` is legal only while",
+              "`now <= round.start_ts + this`. Outside it, only the escrow owner",
+              "may trigger their own deposit (anti-selection; design §4.2)."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "auto_deposit_tip_lamports",
+            "docs": [
+              "Paid to whoever cranks an auto-deposit, out of the ESCROW — capped",
+              "by `MAX_AUTO_DEPOSIT_TIP_LAMPORTS`, never admin-raisable past it."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "auto_deposit_enabled",
+            "docs": [
+              "Feature kill switch. `false` on the deployed config (its reserved",
+              "bytes are zero), so the program upgrade changes no behaviour."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "refund_bps",
+            "docs": [
+              "Refund share of a settled pot, bps — **immutable** after",
+              "`migrate_economics_v2`. The fourth slice: returned to every entry",
+              "pro-rata, the winner's included (I14, I18)."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "mega_field_bps",
+            "docs": [
+              "Mega-Pot share paid pro-rata to the field on a trigger, bps —",
+              "**immutable**. The winner's share is `mega_award_bps`."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "mega_payout_cap_bps",
+            "docs": [
+              "Ceiling on a Mega-Pot payout, in bps **of the round's own pot**.",
+              "`0` = uncapped (the pre-Phase-11 behaviour). This is the sole",
+              "defence against farming the trigger in low-volume rounds, and I21",
+              "pins it: a round can never pay out more than it could have been",
+              "charged in rake over `mega_trigger_modulus` rounds. `u32`, not",
+              "`u16` — the canonical 80_000 exceeds `u16::MAX`."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "account_open_fee_lamports",
+            "docs": [
+              "One-time fee when a `PlayerEscrow` is first created; seeds the",
+              "Mega-Pot. Admin-mutable under `MAX_ACCOUNT_OPEN_FEE_LAMPORTS` —",
+              "onboarding cost, not an economic lever (ADR-10 unaffected)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "economics_version",
+            "docs": [
+              "`0`/`1` = the launch 98/1/1 economics; `2` = four-way partial-loss.",
+              "One-way latch, set by `migrate_economics_v2` (ADR-11); read by the",
+              "UI to know which rules a round played under."
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "reserved",
+            "docs": [
+              "Forward-compat padding: a field can be added later without migration.",
+              "Phase 10 took 17 bytes (8+8+1) for the auto-deposit fields, Phase 11",
+              "another 17 (2+2+4+8+1) for the partial-loss economics — both sit",
+              "**immediately before `reserved`** so every pre-existing field keeps",
+              "its byte offset and the total size stays 340 (zero migration)."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                30
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitializeArgs",
+      "docs": [
+        "Operational parameters. The immutable economics are deliberately absent",
+        "(see module docs); everything here stays admin-mutable via",
+        "`update_config` (Phase 3B)."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "treasury_authority",
+            "docs": [
+              "Fee-sweep destination authority; separate from `admin` for ops hygiene."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle_program_id",
+            "docs": [
+              "Pinned oracle program id; `fulfill_settle` will require the",
+              "randomness account's owner to match it."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle_queue",
+            "docs": [
+              "Pinned Switchboard On-Demand queue; commits only ever run against it."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle_provider",
+            "type": {
+              "defined": {
+                "name": "OracleProvider"
+              }
+            }
+          },
+          {
+            "name": "max_entries_per_round",
+            "docs": [
+              "`0` = unlimited entries."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "round_duration_secs",
+            "type": "i64"
+          },
+          {
+            "name": "max_round_duration_secs",
+            "docs": [
+              "Hard ceiling on anti-snipe extension."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "anti_snipe_window_secs",
+            "type": "i64"
+          },
+          {
+            "name": "anti_snipe_extension_secs",
+            "type": "i64"
+          },
+          {
+            "name": "claim_deadline_secs",
+            "docs": [
+              "After this, an unclaimed prize sweeps to the Mega-Pot."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "min_deposit_lamports",
+            "docs": [
+              "Suggested 10_000_000 (0.01 SOL): an 8× margin over `PlayerEntry` rent."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "anti_snipe_min_deposit_lamports",
+            "docs": [
+              "Only deposits ≥ this extend the anti-snipe timer."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "keeper_tip_lamports",
+            "docs": [
+              "Paid out of the 1% admin cut — never a fourth slice. Default 0."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "randomness_reveal_deadline_slots",
+            "docs": [
+              "Must stay < 512 (`SlotHashes` retention window)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "auto_deposit_window_secs",
+            "docs": [
+              "Permissionless `crank_auto_deposit` window (Phase 10). Pass `0`",
+              "and `false` to birth the program with the feature off — the",
+              "devnet upgrade path reads exactly that from the former reserved",
+              "bytes."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "auto_deposit_tip_lamports",
+            "docs": [
+              "Capped by `MAX_AUTO_DEPOSIT_TIP_LAMPORTS` below."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "auto_deposit_enabled",
+            "type": "bool"
+          },
+          {
+            "name": "account_open_fee_lamports",
+            "docs": [
+              "One-time PlayerEscrow creation fee, seeds the Mega-Pot (Phase 11,",
+              "decision D1: universal — the escrow is the player profile). The one",
+              "new economics-adjacent field that is an onboarding cost, not an",
+              "odds lever, so it takes the same shape as the tip: an arg under a",
+              "compile-time ceiling, admin-mutable later via `update_config`.",
+              "Suggested `10_000_000` (0.01 SOL)."
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MegaPotContribution",
+      "docs": [
+        "A settled round's 1% cut landed in the progressive pot."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "accrued_after",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MegaPotDrainedPreflight",
+      "docs": [
+        "ADR-11 preflight: the pre-v2 Mega-Pot was drained to the treasury so the",
+        "migration's `accrued_lamports == 0` guard is satisfied by real",
+        "bookkeeping. Booked as a pot payout (`lifetime_awarded`), not a trigger;",
+        "the path refuses once `economics_version >= 2`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "destination_treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "mega_pot_accrued_after",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MegaPotTriggered",
+      "docs": [
+        "The 1-in-N event (N = `mega_trigger_modulus`, 625 under Phase 11",
+        "economics): the pot fired and its payable split was snapshotted into",
+        "the round's vault (ADR-8) — `awarded` for the winner via",
+        "`claim_winnings`, `field_pool` pro-rata to every entry via",
+        "`close_entry`. Emitted even on a zero balance, so the trigger",
+        "statistics stay honest (§8 item 12)."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "cycle_index",
+            "type": "u64"
+          },
+          {
+            "name": "awarded",
+            "type": "u64"
+          },
+          {
+            "name": "field_pool",
+            "type": "u64"
+          },
+          {
+            "name": "retained",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MegaPotVault",
+      "docs": [
+        "The progressive jackpot, at [\"mega_pot\"]; singleton."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "accrued_lamports",
+            "docs": [
+              "The **authoritative spendable balance** (I3). Never compute the",
+              "awardable amount from `vault.lamports()` — that includes the",
+              "rent-exempt minimum and a 90% award could push the account below",
+              "exemption."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "lifetime_contributed",
+            "type": "u64"
+          },
+          {
+            "name": "lifetime_awarded",
+            "type": "u64"
+          },
+          {
+            "name": "trigger_count",
+            "type": "u64"
+          },
+          {
+            "name": "last_trigger_round_id",
+            "type": "u64"
+          },
+          {
+            "name": "cycle_index",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "reserved",
+            "docs": [
+              "Forward-compat padding."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MigrateEconomicsV2Args",
+      "docs": [
+        "The v2 economics, written once by the latch. Every field is immutable",
+        "afterwards; `fee_bps_admin`/`fee_bps_mega` are NOT args (they stay at",
+        "their launch values — moving them was never part of the pivot)."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "winner_bps",
+            "type": "u16"
+          },
+          {
+            "name": "refund_bps",
+            "type": "u16"
+          },
+          {
+            "name": "mega_award_bps",
+            "type": "u16"
+          },
+          {
+            "name": "mega_field_bps",
+            "type": "u16"
+          },
+          {
+            "name": "mega_trigger_modulus",
+            "type": "u32"
+          },
+          {
+            "name": "mega_payout_cap_bps",
+            "type": "u32"
+          },
+          {
+            "name": "account_open_fee_lamports",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OracleProvider",
+      "docs": [
+        "Which randomness source NEW rounds use. Borsh variant indices pin the",
+        "on-chain encoding: `0 = Switchboard`, `1 = Orao` (never implemented),",
+        "`2 = Entropy` (the operator hash chain, `EntropyChain`).",
+        "",
+        "Admin-mutable since the randomness-fallback change: the provider is",
+        "read when a round requests randomness — after lock, before any value",
+        "exists under either source — and a pinned round keeps its source until",
+        "it settles or cancels. Settle/cancel/close classify the PINNED account,",
+        "never this field, so a flip can never re-route an in-flight round."
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Switchboard"
+          },
+          {
+            "name": "Orao"
+          },
+          {
+            "name": "Entropy"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OracleProviderChanged",
+      "docs": [
+        "Randomness fallback: the provider for NEW rounds changed."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "provider",
+            "docs": [
+              "`0 = Switchboard`, `1 = Orao`, `2 = Entropy`."
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PauseToggled",
+      "docs": [
+        "AUDIT P-3: pause / unpause is public."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PlayerEntry",
+      "docs": [
+        "One deposit, minted at",
+        "`[\"entry\", round_id.to_le_bytes(), entry_index.to_le_bytes()]`.",
+        "",
+        "Keyed by **index, not player** — the player pubkey is a field, and",
+        "payouts, refunds and reclaimed rent always route to `entry.player`.",
+        "Index keying is what enables the client's O(log n) binary search on",
+        "`ticket_start` (ADR-2).",
+        "",
+        "The immutable half-open range `[ticket_start, ticket_end)` partitions",
+        "`[0, round.total_lamports)` with every other entry of the round (I9):",
+        "`ticket_end` is stored rather than derived so the range check is auditable",
+        "at a glance, and `amount > 0` is enforced at deposit — an empty range",
+        "would break the partition.",
+        "",
+        "For client indexing: `round_id` sits at byte offset 8 (after the",
+        "discriminator) and `player` at offset 20, giving the `memcmp` filters for",
+        "`getProgramAccounts`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "docs": [
+              "Checked against `round.round_id` on every use."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "entry_index",
+            "type": "u32"
+          },
+          {
+            "name": "player",
+            "docs": [
+              "Sole destination for payout, refund and reclaimed rent."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "docs": [
+              "The deposited amount; `> 0` by construction (I8)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "ticket_start",
+            "docs": [
+              "Inclusive range lower bound — the round's total before this deposit."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "ticket_end",
+            "docs": [
+              "Exclusive range upper bound."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "deposit_ts",
+            "type": "i64"
+          },
+          {
+            "name": "deposit_slot",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "reserved",
+            "docs": [
+              "Forward-compat padding."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "PlayerEscrow",
+      "docs": [
+        "One player's auto-deposit terms and lifetime accounting, at",
+        "`[\"escrow\", owner.key().as_ref()]`.",
+        "",
+        "`next_eligible_round_id` is the double-entry guard: `0` at open, set to",
+        "`round_id + 1` after each auto-deposit, and **never reset by re-funding**",
+        "— re-funding must not re-open a round the escrow already played. Round",
+        "ids are monotonic and never reused, so `round_id >= next_eligible` is",
+        "simultaneously the same-round and the replay guard (I17)."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "docs": [
+              "Also the seed. Sole withdrawal authority."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "per_round_lamports",
+            "docs": [
+              "The stake per round. Re-validated against",
+              "`config.min_deposit_lamports` at **every** auto-deposit — the admin",
+              "may have raised the floor since the terms were set."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "max_rounds",
+            "docs": [
+              "Ceiling on `rounds_remaining`; bounds the commitment under",
+              "`auto_reinvest`."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "rounds_remaining",
+            "docs": [
+              "The budget. `0` ⇒ dormant (re-fund or withdraw; no auto-closure)."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "next_eligible_round_id",
+            "docs": [
+              "Double-entry guard (I17): `round_id + 1` after each auto-deposit."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "rounds_funded",
+            "docs": [
+              "Lifetime count of auto-deposited rounds."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "lifetime_deposited",
+            "docs": [
+              "Lifetime lamports funded in by the owner."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "lifetime_staked",
+            "docs": [
+              "Lifetime lamports staked into pots."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "auto_reinvest",
+            "docs": [
+              "Winnings, refunds and rent rebates that land in the escrow buy more",
+              "rounds (capped at `max_rounds`); with the flag off, inbound money",
+              "just accumulates until withdrawn."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Canonical bump, stored at init."
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "reserved",
+            "docs": [
+              "Forward-compat padding."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "PrizeClaimed",
+      "docs": [
+        "The winning entry proved membership and was paid."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "entry_index",
+            "type": "u32"
+          },
+          {
+            "name": "winner",
+            "type": "pubkey"
+          },
+          {
+            "name": "winning_ticket",
+            "type": "u64"
+          },
+          {
+            "name": "winner_payout",
+            "type": "u64"
+          },
+          {
+            "name": "mega_awarded",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RandomnessCommitted",
+      "docs": [
+        "The round PDA itself committed its pinned randomness account through the",
+        "Switchboard On-Demand `randomness_commit` CPI — the commit half of ADR-4.",
+        "The account's authority is the round PDA, so only this program can ever",
+        "commit, and exactly once. `seed_slot` is read back from the account after",
+        "the CPI; `fulfill_settle` re-checks its freshness against `lock_slot`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "randomness_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle",
+            "type": "pubkey"
+          },
+          {
+            "name": "seed_slot",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RandomnessRequested",
+      "docs": [
+        "The round pinned its randomness account (ADR-4). There is exactly one",
+        "such event per non-cancelled-at-lock round; re-pinning is impossible."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "randomness_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "commit_slot",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RevealRandomnessArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "signature",
+            "docs": [
+              "The oracle gateway's secp256k1 signature over the committed slothash."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          },
+          {
+            "name": "recovery_id",
+            "type": "u8"
+          },
+          {
+            "name": "value",
+            "docs": [
+              "The revealed value — belt-checked against what the CPI wrote."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Round",
+      "docs": [
+        "One round of the pari-mutuel pool at [\"round\", round_id.to_le_bytes()].",
+        "",
+        "`total_lamports` doubles as the exclusive upper bound of the ticket space;",
+        "the half-open ranges of the round's entries partition `[0, total)` (I9)."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "state",
+            "type": {
+              "defined": {
+                "name": "RoundState"
+              }
+            }
+          },
+          {
+            "name": "start_ts",
+            "type": "i64"
+          },
+          {
+            "name": "end_ts",
+            "docs": [
+              "Mutated by anti-snipe extension only."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "lock_ts",
+            "type": "i64"
+          },
+          {
+            "name": "lock_slot",
+            "docs": [
+              "Security ordering lives here (slots), not in `lock_ts` (timestamps)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "settle_ts",
+            "docs": [
+              "Start of the claim deadline clock."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "total_lamports",
+            "docs": [
+              "Also the exclusive upper bound of the ticket space."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "entry_count",
+            "docs": [
+              "Next `entry_index`."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "entries_closed",
+            "docs": [
+              "Cleanup progress; the round closes only at `entries_closed == entry_count`."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "first_depositor",
+            "type": "pubkey"
+          },
+          {
+            "name": "single_depositor",
+            "docs": [
+              "`true` until a *different* player deposits — O(1) sole-depositor detection."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "randomness_account",
+            "docs": [
+              "Pinned once by `request_randomness` (ADR-4, no re-rolls)."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "randomness_commit_slot",
+            "docs": [
+              "Timeout clock for `cancel_round`."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "randomness_seed_slot",
+            "docs": [
+              "Recorded at settle for public audit."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "winning_ticket",
+            "docs": [
+              "`< total_lamports` whenever `Settled` (I10)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "winner",
+            "docs": [
+              "Zero until claimed (ADR-2): settle records a ticket, claiming proves",
+              "membership. Indexers read `winning_ticket`, not `winner`."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "winner_payout",
+            "type": "u64"
+          },
+          {
+            "name": "admin_cut",
+            "type": "u64"
+          },
+          {
+            "name": "mega_cut",
+            "type": "u64"
+          },
+          {
+            "name": "mega_awarded",
+            "docs": [
+              "Mega-Pot award snapshotted at settle time (ADR-8)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "vault_owed",
+            "docs": [
+              "ADR-6: lamports this round's vault still owes someone. The single",
+              "balance invariant — `vault.lamports() == rent_minimum + vault_owed`",
+              "holds after every instruction in every state."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "mega_triggered",
+            "type": "bool"
+          },
+          {
+            "name": "prize_claimed",
+            "type": "bool"
+          },
+          {
+            "name": "vault_bump",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "refund_pool",
+            "docs": [
+              "Settle-time obligation to the field: the pot's refund slice, taken",
+              "as the exact residual of `total_lamports` so I18 holds to the",
+              "lamport. Drawn down pro-rata by `close_entry`."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "refunds_paid",
+            "docs": [
+              "Running total actually paid out of `refund_pool` (I20)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "mega_field_pool",
+            "docs": [
+              "Mega-Pot field share snapshotted into the vault at settle (ADR-8);",
+              "`0` when the trigger did not fire."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "mega_field_paid",
+            "docs": [
+              "Running total actually paid out of `mega_field_pool` (I20)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "rent_payer",
+            "docs": [
+              "Who funded this round's two rent-exemptions at `open_round`. The",
+              "deterministic reclaim destination at `close_round`, so the crank",
+              "recovers its own capital instead of donating it to the admin.",
+              "`Pubkey::default()` on rounds opened before Phase 12 — those fall",
+              "back to `config.admin`, which is exactly the old behaviour.",
+              "",
+              "Carved out of the former forward-compat padding in place (Phase 11",
+              "had already taken the 32 bytes before it for the refund/mega-field",
+              "pools): same offset, same width — `Pubkey` is exactly `[u8; 32]`,",
+              "so every pre-existing field keeps its byte offset, the total stays",
+              "302, and the rounds already live on devnet decode the all-zero tail",
+              "as the legacy sentinel."
+            ],
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundCancelled",
+      "docs": [
+        "A round entered the terminal refund state.",
+        "`reason`: `0` = zero deposits (**historical** — pre-Phase-12 `lock_round`",
+        "cancelled empty rounds; since the window roll, no instruction produces",
+        "it, but devnet logs and indexers still carry it), `1` = sole depositor,",
+        "`2` = oracle timeout."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "reason",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundDustSwept",
+      "docs": [
+        "At `close_round`, the two pro-rata pools' rounding dust (at most one",
+        "lamport per entry each, I22) swept to the Mega-Pot — the single",
+        "residual sink. Dust never reaches the treasury."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "mega_pot_accrued_after",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundLocked",
+      "docs": [
+        "The deposit window closed."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "lock_ts",
+            "type": "i64"
+          },
+          {
+            "name": "lock_slot",
+            "type": "u64"
+          },
+          {
+            "name": "total_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "entry_count",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundOpened",
+      "docs": [
+        "A new round began accepting deposits."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "start_ts",
+            "type": "i64"
+          },
+          {
+            "name": "end_ts",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundSettled",
+      "docs": [
+        "The economic core: outcome and split of a settled round. Carries",
+        "`winning_ticket`, `total_lamports` **and** the raw `randomness_value` so",
+        "any third party can independently recompute the outcome — public",
+        "verifiability is a product feature here, not just hygiene.",
+        "",
+        "**Phase 11 semantics change — indexers must be told:** `winner_payout`",
+        "now means *the 9% winner slice* (`floor(total × winner_bps/10_000)`),",
+        "not the v1 98% residual; the residual lives in `refund_pool`, paid",
+        "pro-rata to every entry by `close_entry`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "winning_ticket",
+            "type": "u64"
+          },
+          {
+            "name": "total_lamports",
+            "type": "u64"
+          },
+          {
+            "name": "winner_payout",
+            "docs": [
+              "The winner's slice (9% of the pot under v2 economics)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "refund_pool",
+            "docs": [
+              "The field's slice, drawn down pro-rata by `close_entry`."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "admin_cut",
+            "type": "u64"
+          },
+          {
+            "name": "mega_cut",
+            "type": "u64"
+          },
+          {
+            "name": "mega_triggered",
+            "type": "bool"
+          },
+          {
+            "name": "mega_awarded",
+            "type": "u64"
+          },
+          {
+            "name": "mega_field_pool",
+            "docs": [
+              "The Mega-Pot field share snapshotted into the vault (ADR-8); `0`",
+              "when the trigger did not fire."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "mega_pot_remaining",
+            "type": "u64"
+          },
+          {
+            "name": "randomness_seed_slot",
+            "type": "u64"
+          },
+          {
+            "name": "randomness_value",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundState",
+      "docs": [
+        "Round lifecycle. One-way (invariant I12); `Settled` and `Cancelled` are",
+        "absorbing terminal states. Note the roadmap's five states — the extra",
+        "`AwaitingRandomness` between `Locked` and `Settled` is what makes ADR-4's",
+        "pin/freshness/timeout guarantees expressible at all."
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Open"
+          },
+          {
+            "name": "Locked"
+          },
+          {
+            "name": "AwaitingRandomness"
+          },
+          {
+            "name": "Settled"
+          },
+          {
+            "name": "Cancelled"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundVault",
+      "docs": [
+        "Escrow for one round's deposits, at [\"round_vault\", round_id_le].",
+        "",
+        "Kept separate from `Round` (ADR-8): co-locating data and lamports would",
+        "make every balance assertion subtract a rent minimum that changes with",
+        "the data length. Holds lamports only."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "reserved",
+            "docs": [
+              "Forward-compat padding."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundWindowRolled",
+      "docs": [
+        "An empty `Open` round's deposit window rolled forward in place (Phase",
+        "12): same `Round` account, same `RoundVault`, same parked rent — no",
+        "teardown, no reopen, no state change. The idle-burn fix's on-chain",
+        "footprint: one 5 000-lamport transaction instead of a",
+        "4 128 360-lamport close/open pair. `reason` distinguishes who rolled —",
+        "see the `ROLL_REASON_*` constants."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "start_ts",
+            "docs": [
+              "The new window start — `now` at roll time (R2: both timestamps",
+              "move, so `crank_auto_deposit`'s window and the anti-snipe absolute",
+              "cap stay meaningful)."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "end_ts",
+            "docs": [
+              "The new window end — `now + config.round_duration_secs`."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "reason",
+            "docs": [
+              "`0` = rolled by `lock_round` (keeper or community crank);",
+              "`1` = revived by `deposit` (the first bettor's own transaction)."
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TreasuryVault",
+      "docs": [
+        "Fee sink, at [\"treasury\"]; singleton drained by `admin_sweep_fees`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "accrued_lamports",
+            "docs": [
+              "Sweepable balance (I2: `lamports == rent_min + accrued_lamports`)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "lifetime_accrued",
+            "type": "u64"
+          },
+          {
+            "name": "lifetime_swept",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "reserved",
+            "docs": [
+              "Forward-compat padding."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "UnclaimedPrizeSwept",
+      "docs": [
+        "An unclaimed prize lapsed into the Mega-Pot — value stays in the game",
+        "rather than becoming protocol revenue."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round_id",
+            "type": "u64"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "mega_pot_accrued_after",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UpdateConfigArgs",
+      "docs": [
+        "Operational updates. `None` leaves a field untouched."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "max_entries_per_round",
+            "type": {
+              "option": "u32"
+            }
+          },
+          {
+            "name": "round_duration_secs",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "max_round_duration_secs",
+            "docs": [
+              "Hard ceiling on anti-snipe extension."
+            ],
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "anti_snipe_window_secs",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "anti_snipe_extension_secs",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "claim_deadline_secs",
+            "docs": [
+              "After this, an unclaimed prize sweeps to the Mega-Pot."
+            ],
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "min_deposit_lamports",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "anti_snipe_min_deposit_lamports",
+            "docs": [
+              "Only deposits ≥ this extend the anti-snipe timer."
+            ],
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "keeper_tip_lamports",
+            "docs": [
+              "Paid out of the 1% admin cut — never a fourth slice."
+            ],
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "randomness_reveal_deadline_slots",
+            "docs": [
+              "Must stay < 512 (`SlotHashes` retention window)."
+            ],
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "oracle_queue",
+            "docs": [
+              "Queue migration is operational, not economic — unlike the oracle",
+              "program id, which stays structurally absent here."
+            ],
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "auto_deposit_window_secs",
+            "docs": [
+              "Phase 10 auto-deposit surface (operational, ADR-10-compatible):",
+              "the permissionless-caller window, the crank tip, and the feature",
+              "kill switch. The tip can only ever move *underneath*",
+              "`MAX_AUTO_DEPOSIT_TIP_LAMPORTS`."
+            ],
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "auto_deposit_tip_lamports",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "auto_deposit_enabled",
+            "type": {
+              "option": "bool"
+            }
+          },
+          {
+            "name": "account_open_fee_lamports",
+            "docs": [
+              "Phase 11: the one-time PlayerEscrow creation fee. The sole",
+              "economics-adjacent field allowed here — an onboarding cost, not a",
+              "jackpot-odds lever (R7/ADR-10), movable only underneath",
+              "`MAX_ACCOUNT_OPEN_FEE_LAMPORTS`."
+            ],
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "oracle_provider",
+            "docs": [
+              "Randomness fallback: the source NEW rounds request from. Rounds",
+              "already pinned keep theirs (settle/cancel classify the pinned",
+              "account), so switching is safe at any time. Operational, not",
+              "economic: it changes no odds, fees or payouts."
+            ],
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "OracleProvider"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

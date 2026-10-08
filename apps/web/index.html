@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>ORB — Pari-Mutuel Wheel</title>
+    <link rel="icon" type="image/png" href="/orb-logo.png" />
+    <link rel="apple-touch-icon" href="/orb-logo.png" />
+    <meta
+      name="description"
+      content="ORB — a pari-mutuel jackpot wheel on Solana. Every deposit mints a ticket interval; verifiable randomness draws one. 89% of every stake comes back."
+    />
+    <meta name="theme-color" content="#090d14" />
+    <style>
+      /* Pre-paint the base AND the atmosphere's centre of gravity, so the
+         first frame already looks like the app instead of a flat slab that
+         gains a glow once the stylesheet lands. */
+      html {
+        background-color: #090d14;
+        background-image: radial-gradient(
+            68rem 46rem at 26% -12%,
+            rgb(27 42 72 / 0.9) 0%,
+            rgb(27 42 72 / 0) 62%
+          ),
+          radial-gradient(
+            44rem 32rem at 50% -8%,
+            rgb(242 181 68 / 0.08) 0%,
+            rgb(242 181 68 / 0) 58%
+          );
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

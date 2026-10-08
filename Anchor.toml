@@ -1,0 +1,39 @@
+[toolchain]
+anchor_version = "0.32.1"
+
+[features]
+seeds = false
+skip-lint = false
+
+[programs.localnet]
+orbit_jackpot = "G5yNWmzSPVozbXSj2Muv4pV8AbVwTHhJfL6nfWyAC48R"
+
+# Initial deploy 2026-10-06; upgrades 2026-10-07: Phase 11 economics
+# (deploy tx 52EyTK9S…, slot 508295193, ELF 707,264 B, alloc extended to
+# 731,384 B; economics migrated live tx 2gANhyiW… → economics_version 2)
+# and Phase 12 idle-burn elimination (deploy tx 5yFSALtC…, slot 508390496,
+# ELF 709,480 B via Helius RPC after public-endpoint 429 storms, zero
+# state migration: empty rounds roll their window in place, deposit
+# revives a stale empty window, Round.reserved → rent_payer so close_round
+# returns both rents to the opener — legacy all-zero sentinel rounds fall
+# back to config.admin; round_duration restored to 120 s the same day,
+# crank v-next deployed to the droplet with idle poll backoff).
+[programs.devnet]
+orbit_jackpot = "G5yNWmzSPVozbXSj2Muv4pV8AbVwTHhJfL6nfWyAC48R"
+
+# Mainnet: build with `anchor build -- --features mainnet` (lib.rs picks the
+# id at compile time). Deploy runbook: docs/runbooks/mainnet-launch.md.
+[programs.mainnet]
+orbit_jackpot = "ETMqujXHndqa3SfGHFhNMPwb4w43NhV96Majv3xbC3bH"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+# The integration harness is Rust-side (solana-program-test banks client),
+# so `anchor test` runs it directly — no validator, no TS runtime needed.
+test = "cargo test -p orbit_jackpot --test integration -- --nocapture"

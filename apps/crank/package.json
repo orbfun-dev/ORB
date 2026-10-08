@@ -1,0 +1,35 @@
+{
+  "name": "@orbit-jackpot/crank",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Orbit Jackpot autonomous keeper/crank service — drives open → lock → Switchboard settle → sweep/close on Solana, unattended.",
+  "license": "Apache-2.0",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "build": "tsc -p ./tsconfig.build.json",
+    "test": "ts-mocha -p ./tsconfig.json -t 60000 tests/**/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "0.32.1",
+    "@orbit-jackpot/sdk": "^0.3.0",
+    "@solana/spl-token": "^0.4.15",
+    "@solana/web3.js": "^1.99.0",
+    "@switchboard-xyz/common": "^5.8.5",
+    "@switchboard-xyz/on-demand": "^3.10.6",
+    "bs58": "^4.0.1",
+    "pino": "^9.4.0"
+  },
+  "devDependencies": {
+    "@types/bs58": "^4.0.1",
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^22.0.0",
+    "chai": "^4.3.0",
+    "mocha": "^10.0.0",
+    "ts-mocha": "^10.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.6.0"
+  }
+}

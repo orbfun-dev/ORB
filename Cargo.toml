@@ -1,0 +1,15 @@
+[workspace]
+members = ["programs/*"]
+resolver = "2"
+
+# SBF builds compile with `--release`; without this the release profile
+# silently drops the overflow panics the zero-bare-arithmetic discipline
+# depends on (dev builds have them by default). `anchor build` enforces it —
+# required for IDL extraction (Phase 7.0).
+[profile.release]
+overflow-checks = true
+# Size over speed (2026-10-08, randomness fallback): the entropy provider
+# grew the default build to 819 KB, past the deployed mainnet program
+# account (754,648 B), which would have needed a ~0.45 SOL permanent
+# extension. "s" builds 704 KB; CU is re-measured by cu_profile.
+opt-level = "s"

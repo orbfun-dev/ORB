@@ -1,0 +1,75 @@
+{
+  "name": "orbit-jackpot",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:rust && npm test --workspace @orbit-jackpot/sdk",
+    "test:sdk": "npm test --workspace @orbit-jackpot/sdk",
+    "test:rust": "cargo test -p orbit_jackpot --lib && cargo test -p orbit_jackpot --test integration",
+    "test:unit": "cargo test -p orbit_jackpot --lib",
+    "test:integration": "cargo test -p orbit_jackpot --test integration -- --nocapture",
+    "typecheck": "npm run typecheck --workspace @orbit-jackpot/sdk",
+    "lint": "cargo fmt --check && cargo clippy --all-targets -- -D warnings",
+    "build:sdk": "npm run build --workspace @orbit-jackpot/sdk",
+    "dev:web": "npm run build:sdk && npm run dev --workspace @orbit-jackpot/web",
+    "build:web": "npm run build:sdk && npm run build --workspace @orbit-jackpot/web",
+    "typecheck:web": "npm run typecheck --workspace @orbit-jackpot/web",
+    "test:web": "npm run test --workspace @orbit-jackpot/web",
+    "dev:crank": "npm run build:sdk && npm run dev --workspace @orbit-jackpot/crank",
+    "build:crank": "npm run build:sdk && npm run build --workspace @orbit-jackpot/crank",
+    "typecheck:crank": "npm run typecheck --workspace @orbit-jackpot/crank",
+    "test:crank": "npm run test --workspace @orbit-jackpot/crank",
+    "demo:gen-randomness": "tsx scripts/local-demo/gen-randomness-account.ts",
+    "demo:validator": "bash scripts/local-demo/start-validator.sh",
+    "demo:seed": "tsx scripts/local-demo/seed-round.ts",
+    "demo:settle": "tsx scripts/local-demo/settle-round.ts",
+    "demo:player-deposit": "tsx scripts/local-demo/player-deposit.ts",
+    "devnet:init": "tsx scripts/devnet/init-config.ts",
+    "devnet:migrate-economics": "tsx scripts/devnet/migrate-economics-v2.ts",
+    "devnet:drain-mega-pot": "tsx scripts/devnet/drain-mega-pot.ts",
+    "devnet:open": "tsx scripts/devnet/open-round.ts",
+    "devnet:bots": "tsx scripts/devnet/devnet-bot-deposit.ts",
+    "devnet:settle": "tsx scripts/devnet/devnet-settle.ts",
+    "devnet:crank-fund": "tsx scripts/devnet/crank-fund.ts",
+    "devnet:enable-auto-deposit": "tsx scripts/devnet/enable-auto-deposit.ts",
+    "devnet:set-round-duration": "tsx scripts/devnet/set-round-duration.ts",
+    "devnet:escrow-fund": "tsx scripts/devnet/escrow-fund.ts",
+    "devnet:escrow-withdraw": "tsx scripts/devnet/escrow-withdraw.ts",
+    "devnet:escrow-demo": "tsx scripts/devnet/escrow-demo.ts",
+    "verify:all": "npm run lint && cargo test -p orbit_jackpot --lib && cargo test -p orbit_jackpot --test integration && npm run test:sdk && npm run test:web && npm run typecheck:web && npm run build:web && npm run test:crank && npm run typecheck:crank && npm run test:raffle && npm run typecheck:raffle",
+    "test:raffle": "npm test --workspace @orbit-jackpot/raffle",
+    "typecheck:raffle": "npm run typecheck --workspace @orbit-jackpot/raffle && tsc --noEmit -p api/tsconfig.json",
+    "raffle:migrate": "tsx scripts/raffle/migrate.ts",
+    "raffle:verify-draw": "tsx scripts/raffle/verify-draw.ts"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "0.32.1",
+    "@solana/web3.js": "^1.99.0",
+    "@switchboard-xyz/on-demand": "^3.10.6",
+    "bn.js": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.6",
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^22.0.0",
+    "chai": "^4.3.0",
+    "mocha": "^10.0.0",
+    "ts-mocha": "^10.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.6.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "overrides": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.1",
+    "rpc-websockets": {
+      "uuid": "11.1.1"
+    }
+  },
+  "license": "Apache-2.0"
+}

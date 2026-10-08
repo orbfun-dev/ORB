@@ -1,0 +1,357 @@
+{
+  "accounts": {
+    "GlobalConfig": {
+      "expected": {
+        "accountOpenFeeLamports": "10000000",
+        "activeRoundId": "7",
+        "admin": "29d2S7vB453rNYFdR5Ycwt7y9haRT5fwVwL9zTmBhfV2",
+        "antiSnipeExtensionSecs": "15",
+        "antiSnipeMinDepositLamports": "100000000",
+        "antiSnipeWindowSecs": "30",
+        "autoDepositEnabled": true,
+        "autoDepositTipLamports": "200000",
+        "autoDepositWindowSecs": "20",
+        "bump": 254,
+        "claimDeadlineSecs": "2592000",
+        "economicsVersion": 2,
+        "feeBpsAdmin": 100,
+        "feeBpsMega": 100,
+        "keeperTipLamports": "1000000",
+        "maxEntriesPerRound": 500,
+        "maxRoundDurationSecs": "600",
+        "megaAwardBps": 5000,
+        "megaFieldBps": 4000,
+        "megaPayoutCapBps": 80000,
+        "megaTriggerModulus": 625,
+        "minDepositLamports": "10000000",
+        "nextRoundId": "8",
+        "oracleProgramId": "5bV6jUfhDHCQVA1WfKBUnXUsboJgoKgkzkKcxr3joew5",
+        "oracleProvider": "switchboard",
+        "oracleQueue": "5fQPsn8hoaVddFG26cWQ5QFdqxWtUPNaZ9zH2E6LYzFn",
+        "paused": false,
+        "pendingAdmin": "3JF3sEqM796hk5WFqA6EtmEwJQ9quALszsfJyvXNQKy3",
+        "randomnessRevealDeadlineSlots": "400",
+        "refundBps": 8900,
+        "roundDurationSecs": "300",
+        "treasuryAuthority": "4Ss5JMkXAD9Z7cktFEdrqeMuT6jGMF1pVozTyPHZ6zT4",
+        "winnerBps": 900
+      },
+      "hex": "95089ccaa0fcb0d91111111111111111111111111111111111111111111111111111111111111111012222222222222222222222222222222222222222222222222222222222222222333333333333333333333333333333333333333333333333333333333333333344444444444444444444444444444444444444444444444444444444444444444545454545454545454545454545454545454545454545454545454545454545640064008403881371020000f40100002c0100000000000058020000000000001e000000000000000f00000000000000008d270000000000809698000000000000e1f5050000000040420f00000000009001000000000000070000000000000008000000000000000000fe1400000000000000400d03000000000001c422a00f80380100809698000000000002abababababababababababababababababababababababababababababab"
+    },
+    "MegaPotVault": {
+      "expected": {
+        "accruedLamports": "888888888888888",
+        "bump": 251,
+        "cycleIndex": "2",
+        "lastTriggerRoundId": "5",
+        "lifetimeAwarded": "777777777777",
+        "lifetimeContributed": "999999999999999",
+        "triggerCount": "3"
+      },
+      "hex": "9a865b9e11cee992388e779270280300ff7fc6a47e8d0300710c2b17b5000000030000000000000005000000000000000200000000000000fbdededededededededededededededededededededededededededededededede"
+    },
+    "PlayerEntry": {
+      "expected": {
+        "amountLamports": "5550000000",
+        "bump": 252,
+        "depositSlot": "2700000011",
+        "depositTs": "1700000010",
+        "entryIndex": 2,
+        "player": "AByCTxLPRZPoyK22KdMxa3xkCbcNbeNWzVeEvh6UcJs9",
+        "roundId": "7",
+        "ticketEnd": "105550000000",
+        "ticketStart": "100000000000"
+      },
+      "hex": "9e062768ea0499ff07000000000000000200000088888888888888888888888888888888888888888888888888888888888888888047ce4a0100000000e8764817000000802f4593180000000af15365000000000bbbeea000000000fccdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+    },
+    "PlayerEscrow": {
+      "expected": {
+        "autoReinvest": true,
+        "bump": 250,
+        "lifetimeDeposited": "4999999999999999",
+        "lifetimeStaked": "370370367037035",
+        "maxRounds": 40,
+        "nextEligibleRoundId": "987654321",
+        "owner": "H9ceCyJSLGz9LdnJFPxbYDTKLxH6yC5yYXHpvqiBZd5x",
+        "perRoundLamports": "123456789012345",
+        "roundsFunded": "3",
+        "roundsRemaining": 37
+      },
+      "hex": "55d845586e9c08aaefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef79df0d86487000002800000025000000b168de3a000000000300000000000000ff7fe03779c311006b9e2992d950010001faeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    "Round": {
+      "expected": {
+        "adminCut": "1234567890123456",
+        "bump": 255,
+        "endTs": "1700000002",
+        "entriesClosed": 1,
+        "entryCount": 3,
+        "firstDepositor": "6k78AbasGMFFrhG95Pj6jQbqkVt7FQMhVgemxJovWKR6",
+        "lockSlot": "2700000004",
+        "lockTs": "1700000003",
+        "megaAwarded": "90000000000000000",
+        "megaCut": "1234567890123457",
+        "megaFieldPaid": "4888848888488848",
+        "megaFieldPool": "48888488884888488",
+        "megaTriggered": true,
+        "prizeClaimed": false,
+        "randomnessAccount": "7tj9biW3KRJ7EEWmVUGigHiouCTXhV2dzcyvwma7Cyu7",
+        "randomnessCommitSlot": "2700000006",
+        "randomnessSeedSlot": "2700000007",
+        "refundPool": "109890109890109890",
+        "refundsPaid": "10989010989010989",
+        "rentPayer": "DhkZucYvB4qbE22R1AKjha6QtrYqcx5A3iJMxTRdTddu",
+        "roundId": "7",
+        "settleTs": "1700000005",
+        "singleDepositor": false,
+        "startTs": "-1700000001",
+        "state": "settled",
+        "totalLamports": "123456789012345678",
+        "vaultBump": 253,
+        "vaultOwed": "121212121212121213",
+        "winner": "93MB2qRDNVLxbmmPuYpLdAqn3u2x9ZhaVZK5wELHueP8",
+        "winnerPayout": "121212121212121212",
+        "winningTicket": "98765432101234567"
+      },
+      "hex": "577fa533494e74ae070000000000000003ff0eac9affffffff02f153650000000003f153650000000004bbeea00000000005f15365000000004ef330a64b9bb6010300000001000000555555555555555555555555555555555555555555555555555555555555555500666666666666666666666666666666666666666666666666666666666666666606bbeea00000000007bbeea00000000087677b20a3e25e0177777777777777777777777777777777777777777777777777777777777777777cf05133c8a1ae01c0ba8a3cd5620400c1ba8a3cd56204000000c9ed85be3f017df05133c8a1ae010100fdffc2215404796886012dd06e80720a2700a8e39655d2afad0090e35bd5615e1100bcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbc"
+    }
+  },
+  "comment": "Byte-exact layout fixture for the TypeScript SDK decoders. Single writer: state/layout_fixture.rs (regenerates when absent, verifies when present). TS reads only — never regenerate from TS.",
+  "events": {
+    "AccountOpened": {
+      "expected": {
+        "escrow": "HHTEVaETWsabcpHK7zcS7xzqqGhWKKTcfLd93boP4HjN",
+        "feeLamports": "10000000",
+        "megaPotAccruedAfter": "888888888898888",
+        "owner": "H9ceCyJSLGz9LdnJFPxbYDTKLxH6yC5yYXHpvqiBZd5x",
+        "rentLamports": "1740000"
+      },
+      "hex": "fa59274323777e3fefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefeff1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f18096980000000000e08c1a000000000048b5779270280300"
+    },
+    "AutoDeposited": {
+      "expected": {
+        "amountLamports": "100000000",
+        "entryIndex": 2,
+        "entryRentLamports": "1203960",
+        "escrow": "HHTEVaETWsabcpHK7zcS7xzqqGhWKKTcfLd93boP4HjN",
+        "owner": "H9ceCyJSLGz9LdnJFPxbYDTKLxH6yC5yYXHpvqiBZd5x",
+        "roundId": "7",
+        "roundTotalLamports": "100100000000",
+        "roundsRemaining": 9,
+        "ticketEnd": "100100000000",
+        "ticketStart": "100000000000",
+        "tipLamports": "200000"
+      },
+      "hex": "b359bee262d304fb070000000000000002000000efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefeff1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f100e1f50500000000400d030000000000f85e12000000000000e876481700000000c96c4e1700000000c96c4e1700000009000000"
+    },
+    "Deposited": {
+      "expected": {
+        "amountLamports": "5550000000",
+        "entryIndex": 2,
+        "extended": true,
+        "newEndTs": "1700000012",
+        "player": "AByCTxLPRZPoyK22KdMxa3xkCbcNbeNWzVeEvh6UcJs9",
+        "roundId": "7",
+        "roundTotalLamports": "105550000000",
+        "ticketEnd": "105550000000",
+        "ticketStart": "100000000000"
+      },
+      "hex": "6f8d1a2da123643907000000000000000200000088888888888888888888888888888888888888888888888888888888888888888047ce4a0100000000e8764817000000802f459318000000802f4593180000000cf153650000000001"
+    },
+    "EconomicsMigrated": {
+      "expected": {
+        "accountOpenFeeLamports": "10000000",
+        "feeBpsAdmin": 100,
+        "feeBpsMega": 100,
+        "fromVersion": 0,
+        "megaAwardBps": 5000,
+        "megaFieldBps": 4000,
+        "megaPayoutCapBps": 80000,
+        "megaTriggerModulus": 625,
+        "refundBps": 8900,
+        "toVersion": 2,
+        "winnerBps": 900
+      },
+      "hex": "418dea38f25b8a0500028403c422640064008813a00f71020000803801008096980000000000"
+    },
+    "EntryRefundPaid": {
+      "expected": {
+        "amountLamports": "5550000000",
+        "entryIndex": 2,
+        "megaFieldLamports": "2220000000",
+        "player": "AByCTxLPRZPoyK22KdMxa3xkCbcNbeNWzVeEvh6UcJs9",
+        "refundLamports": "4939500000",
+        "roundId": "7"
+      },
+      "hex": "6fee49089029f0da07000000000000000200000088888888888888888888888888888888888888888888888888888888888888888047ce4a01000000e0c96a26010000000083528400000000"
+    },
+    "EntryRefunded": {
+      "expected": {
+        "amountLamports": "5550000000",
+        "entryIndex": 2,
+        "player": "AByCTxLPRZPoyK22KdMxa3xkCbcNbeNWzVeEvh6UcJs9",
+        "roundId": "7"
+      },
+      "hex": "225282745d8bbcea07000000000000000200000088888888888888888888888888888888888888888888888888888888888888888047ce4a01000000"
+    },
+    "EscrowDepleted": {
+      "expected": {
+        "escrow": "HHTEVaETWsabcpHK7zcS7xzqqGhWKKTcfLd93boP4HjN",
+        "lastRoundId": "7",
+        "owner": "H9ceCyJSLGz9LdnJFPxbYDTKLxH6yC5yYXHpvqiBZd5x"
+      },
+      "hex": "ee877c4c45e56216efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefeff1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f10700000000000000"
+    },
+    "EscrowFunded": {
+      "expected": {
+        "amountLamports": "1014039600",
+        "autoReinvest": true,
+        "escrow": "HHTEVaETWsabcpHK7zcS7xzqqGhWKKTcfLd93boP4HjN",
+        "maxRounds": 10,
+        "owner": "H9ceCyJSLGz9LdnJFPxbYDTKLxH6yC5yYXHpvqiBZd5x",
+        "perRoundLamports": "100000000",
+        "roundsRemaining": 10,
+        "totalLamports": "1015309600"
+      },
+      "hex": "e4f3a64a16a79df4efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefeff1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f13004713c0000000000e1f505000000000a0000000a000000012065843c00000000"
+    },
+    "EscrowWithdrawn": {
+      "expected": {
+        "amountLamports": "500000000",
+        "escrow": "HHTEVaETWsabcpHK7zcS7xzqqGhWKKTcfLd93boP4HjN",
+        "owner": "H9ceCyJSLGz9LdnJFPxbYDTKLxH6yC5yYXHpvqiBZd5x",
+        "remainingLamports": "1270000"
+      },
+      "hex": "2bceae2f69dbd8efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefeff1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f10065cd1d00000000f060130000000000"
+    },
+    "FeesSwept": {
+      "expected": {
+        "amountLamports": "1234567890123456",
+        "destination": "CVDFLCAjXhVWiPXH9nTCTpCgVzmDVoiPzNJYuccr1dqB"
+      },
+      "hex": "60da73884aaacaacc0ba8a3cd5620400aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "MegaPotContribution": {
+      "expected": {
+        "accruedAfter": "888888888888888",
+        "amountLamports": "1234567890123457",
+        "roundId": "7"
+      },
+      "hex": "cdab51f23fa847a00700000000000000c1ba8a3cd5620400388e779270280300"
+    },
+    "MegaPotDrainedPreflight": {
+      "expected": {
+        "amountLamports": "3069000000",
+        "destinationTreasury": "EBBduiozK9vBCemy4FcAjhVkby2FLPstxZxxN7jpgxtr",
+        "megaPotAccruedAfter": "0"
+      },
+      "hex": "4268f2e8d7ec51e44039edb600000000c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c30000000000000000"
+    },
+    "MegaPotTriggered": {
+      "expected": {
+        "awarded": "90000000000000000",
+        "cycleIndex": "2",
+        "fieldPool": "48888488884888488",
+        "retained": "888888888888888",
+        "roundId": "7"
+      },
+      "hex": "5bfee10b2ac8a6a3070000000000000002000000000000000000c9ed85be3f01a8e39655d2afad00388e779270280300"
+    },
+    "PrizeClaimed": {
+      "expected": {
+        "entryIndex": 2,
+        "megaAwarded": "90000000000000000",
+        "roundId": "7",
+        "winner": "93MB2qRDNVLxbmmPuYpLdAqn3u2x9ZhaVZK5wELHueP8",
+        "winnerPayout": "121212121212121212",
+        "winningTicket": "98765432101234567"
+      },
+      "hex": "d596c04cc721d426070000000000000002000000777777777777777777777777777777777777777777777777777777777777777787677b20a3e25e017cf05133c8a1ae010000c9ed85be3f01"
+    },
+    "RandomnessCommitted": {
+      "expected": {
+        "oracle": "BQWX3Nia4vjtUwXAB1EVoorUbTPzinjH3qe3yXuG4Jfs",
+        "randomnessAccount": "BLbDu5FZUdSfLrGejhuaWw5iMJBo3j3TVRyPv9rfJyMA",
+        "roundId": "7",
+        "seedSlot": "2700000010"
+      },
+      "hex": "7d962e4766fbfd6c070000000000000099999999999999999999999999999999999999999999999999999999999999999a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a9a0abbeea000000000"
+    },
+    "RandomnessRequested": {
+      "expected": {
+        "commitSlot": "2700000009",
+        "randomnessAccount": "BLbDu5FZUdSfLrGejhuaWw5iMJBo3j3TVRyPv9rfJyMA",
+        "roundId": "7"
+      },
+      "hex": "0a40b71d683f5a950700000000000000999999999999999999999999999999999999999999999999999999999999999909bbeea000000000"
+    },
+    "RoundCancelled": {
+      "expected": {
+        "reason": 2,
+        "roundId": "7"
+      },
+      "hex": "ee8d69afb69e0f07070000000000000002"
+    },
+    "RoundDustSwept": {
+      "expected": {
+        "amountLamports": "3",
+        "megaPotAccruedAfter": "888888888888891",
+        "roundId": "7"
+      },
+      "hex": "c06695cae1fd99b1070000000000000003000000000000003b8e779270280300"
+    },
+    "RoundLocked": {
+      "expected": {
+        "entryCount": 3,
+        "lockSlot": "2700000008",
+        "lockTs": "1700000021",
+        "roundId": "7",
+        "totalLamports": "123456789012345678"
+      },
+      "hex": "133a5b9d184ccf07070000000000000015f153650000000008bbeea0000000004ef330a64b9bb60103000000"
+    },
+    "RoundOpened": {
+      "expected": {
+        "endTs": "1700000320",
+        "roundId": "7",
+        "startTs": "1700000020"
+      },
+      "hex": "63ade4488e396db2070000000000000014f153650000000040f2536500000000"
+    },
+    "RoundSettled": {
+      "expected": {
+        "adminCut": "1234567890123456",
+        "megaAwarded": "90000000000000000",
+        "megaCut": "1234567890123457",
+        "megaFieldPool": "48888488884888488",
+        "megaPotRemaining": "788888888888888",
+        "megaTriggered": true,
+        "randomnessSeedSlot": "2700000007",
+        "randomnessValue": "5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a",
+        "refundPool": "109890109890109890",
+        "roundId": "7",
+        "totalLamports": "123456789012345678",
+        "winnerPayout": "121212121212121212",
+        "winningTicket": "98765432101234567"
+      },
+      "hex": "f9e142369dc8eade070000000000000087677b20a3e25e014ef330a64b9bb6017cf05133c8a1ae01c221540479688601c0ba8a3cd5620400c1ba8a3cd5620400010000c9ed85be3f01a8e39655d2afad00384efd817dcd020007bbeea0000000005a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a"
+    },
+    "RoundWindowRolled": {
+      "expected": {
+        "endTs": "1700000330",
+        "reason": 1,
+        "roundId": "7",
+        "startTs": "1700000030"
+      },
+      "hex": "feaa3ae7dabab2ec07000000000000001ef15365000000004af253650000000001"
+    },
+    "UnclaimedPrizeSwept": {
+      "expected": {
+        "amountLamports": "121212121212121213",
+        "megaPotAccruedAfter": "888888888888889",
+        "roundId": "7"
+      },
+      "hex": "564c51cce827e6c907000000000000007df05133c8a1ae01398e779270280300"
+    }
+  }
+}

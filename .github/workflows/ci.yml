@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  SOLANA_VERSION: v3.1.4
+  ANCHOR_VERSION: 0.32.1
+  CARGO_TERM_COLOR: always
+
+jobs:
+  program:
+    name: Program (fmt, clippy, unit, build, IDL, integration)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the pinned Rust toolchain
+        run: |
+          rustup show            # installs the version from rust-toolchain.toml
+          rustup component add rustfmt clippy
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+
+      - name: Install Solana CLI
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/${SOLANA_VERSION}/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+
+      - name: Install Anchor CLI
+        run: npm install -g "@coral-xyz/anchor-cli@${ANCHOR_VERSION}"
+
+      # Advisory until the next program upgrade: Anchor embeds source line
+      # numbers in its error logs, so reformatting changes the binary, and
+      # the source here must keep reproducing the deployed mainnet program.
+      - name: Format (advisory)
+        continue-on-error: true
+        run: cargo fmt --check -p orbit_jackpot
+
+      - name: Clippy
+        run: cargo clippy -p orbit_jackpot --all-targets -- -D warnings
+
+      - name: Unit and property tests
+        run: cargo test -p orbit_jackpot --lib
+
+      - name: Build program and IDL
+        run: anchor build
+
+      - name: Committed IDL matches the build
+        run: |
+          jq -S . target/idl/orbit_jackpot.json > /tmp/built.json
+          jq -S . packages/sdk/idl/orbit_jackpot.json > /tmp/committed.json
+          diff -u /tmp/committed.json /tmp/built.json
+
+      - name: Integration tests
+        run: cargo test -p orbit_jackpot --test integration
+
+  typescript:
+    name: TypeScript (sdk, crank, web, raffle typecheck)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build SDK
+        run: npm run build:sdk
+
+      - name: Typecheck
+        run: |
+          npm run typecheck
+          npm run typecheck:crank
+          npm run typecheck:web
+          npm run typecheck:raffle
+
+      - name: SDK tests
+        run: npm run test:sdk
+
+      - name: Crank tests
+        run: npm run test:crank
+
+      - name: Web tests
+        run: npm run test:web

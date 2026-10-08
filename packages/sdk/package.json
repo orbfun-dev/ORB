@@ -1,0 +1,31 @@
+{
+  "name": "@orbit-jackpot/sdk",
+  "version": "0.3.0",
+  "description": "TypeScript SDK for the Orbit Jackpot program: wheel geometry, PDA derivation, raw-account decoders, CPI-event subscriptions, and transaction builders.",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "ts-mocha -p ./tsconfig.json -t 60000 tests/**/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p ./tsconfig.build.json"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "0.32.1",
+    "@solana/web3.js": "^1.99.0",
+    "bn.js": "^5.2.1",
+    "bs58": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.6",
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^22.0.0",
+    "chai": "^4.3.0",
+    "mocha": "^10.0.0",
+    "ts-mocha": "^10.0.0",
+    "typescript": "^5.6.0",
+    "@types/bs58": "^4.0.1"
+  },
+  "type": "commonjs"
+}

@@ -1,0 +1,43 @@
+# orbit-crank — the Orbit Jackpot autonomous keeper (systemd unit).
+#
+# Install:  sudo cp apps/crank/orbit-crank.service /etc/systemd/system/
+#           sudo systemctl daemon-reload && sudo systemctl enable --now orbit-crank
+#
+# ExecStart points at apps/crank/dist/main.js inside the deployed WORKSPACE
+# tree (not a flattened /opt/orbit-crank/dist): the crank consumes the
+# workspace SDK and the hoisted node_modules tree, resolves its version
+# from ../package.json, and anchors its state dir to the working directory
+# — a flattened tree would break all three.
+#
+# Full operations runbook: docs/runbooks/crank-ops.md
+
+[Unit]
+Description=Orbit Jackpot autonomous keeper (crank)
+Documentation=file:///opt/orbit-crank/docs/runbooks/crank-ops.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=orbit
+Group=orbit
+WorkingDirectory=/opt/orbit-crank/apps/crank
+EnvironmentFile=/etc/orbit-crank/orbit-crank.env
+ExecStart=/usr/bin/node dist/main.js
+Restart=always
+RestartSec=5
+
+# Stdout/stderr JSON logs land in journald.
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=orbit-crank
+
+# Sandbox: the keeper needs the network, its state dir, and nothing else.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/orbit-crank/apps/crank/var
+
+[Install]
+WantedBy=multi-user.target

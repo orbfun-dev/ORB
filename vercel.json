@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm ci --include=dev",
+  "buildCommand": "VITE_ORE_AUTOJOIN_ENABLED=true npm run build:web",
+  "outputDirectory": "apps/web/dist",
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/ore-lite", "destination": "/index.html" },
+    { "source": "/ore-lite/:path*", "destination": "/index.html" }
+  ]
+}

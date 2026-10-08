@@ -1,0 +1,34 @@
+# Rust build artifacts (also keeps the local program keypair private)
+/target
+
+# Anchor / Node
+.anchor
+node_modules/
+dist/
+
+# Local env files (`.env.example` stays committed as the template)
+.env
+.env.local
+.env.*.local
+
+# Tooling noise
+.DS_Store
+*.log
+
+# Local demo / devnet ops keypairs (generated, never commit)
+scripts/local-demo/keys/
+scripts/devnet/keys/
+
+# Crank runtime state (round bookkeeping, per-round randomness keypairs)
+apps/crank/var/
+
+# Mimosa plugin session state (scan/hook artifacts, never commit)
+.mimosa/
+
+# Vercel CLI project link state (project.json is machine-local)
+.vercel/
+
+# Per-developer tooling config (MCP server links, IDE ignore rules, launch configs)
+.mcp.json
+.zcodeignore
+.claude/

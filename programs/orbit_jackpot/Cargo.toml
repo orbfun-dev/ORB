@@ -1,0 +1,74 @@
+[package]
+name = "orbit_jackpot"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[lib]
+crate-type = ["cdylib", "lib"]   # "lib" is what makes `cargo test --lib` work in Phase 1
+name = "orbit_jackpot"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+# Builds the MAINNET program id (see declare_id! in lib.rs). Never on in tests.
+mainnet = []
+# dev-oracle = []   # ONLY if Phase 0 task 0.4's fallback is taken; must be off in the verifiable build
+
+[dependencies]
+anchor-lang = { version = "=0.32.2", features = ["event-cpi", "init-if-needed"] }
+# §7 pins features = ["anchor"], but that spike result no longer reproduces:
+# switchboard's `anchor` feature unifies anchor-lang with borsh 1.8.1 while
+# anchor-lang 0.32.2 carries borsh 0.10.4, producing E0119 duplicate impls.
+# The `anchor` feature only supplies Switchboard-side Anchor account types,
+# which §7's IDL note explicitly says we do not use (randomness account is
+# parsed manually as UncheckedAccount). `solana-v2` is the feature `anchor`
+# was pulling in that we do need.
+switchboard-on-demand = { version = "0.13.0", default-features = false, features = ["solana-v2"] }
+# sha256 for the self-hosted entropy provider (sol_sha256 syscall on-chain);
+# already in the tree via solana-program 2.3 — pinned to the locked version.
+solana-sha256-hasher = "=2.3.0"
+
+[dev-dependencies]
+proptest = "1.11"
+rand_chacha = "0.10"
+# Exact pin = anchor-lang 0.32.2's borsh, so tests share the same crate
+# instance and can (de)serialize the program's account/args types directly.
+borsh = "=0.10.4"
+solana-program-test = "2.3"
+solana-program-runtime = "2.3"
+solana-transaction-context = "2.3"
+solana-sdk = "2.3"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+# Test-only: consuming the committed cross-language KAT fixture (ADR-9),
+# which is JSON by design for the TS suite. Never enters the program binary.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Test-only: decoding anchor `emit!` payloads ("Program data: <base64>")
+# out of simulated transaction logs — the Phase 12 battery asserts event
+# emission, not just account-state effects. Same scheme the SDK's
+# parseEventLog uses on live logs.
+base64 = "0.22"
+
+[lints.rust]
+# anchor's entrypoint and Accounts-derive macros expand
+# `cfg(feature = "custom-heap"/"custom-panic"/"anchor-debug")` and
+# `cfg(target_os = "solana")` into this crate; declaring them keeps the
+# host-target test build warning-clean under `-D warnings`.
+unexpected_cfgs = { level = "warn", check-cfg = [
+    'cfg(target_os, values("solana"))',
+    'cfg(feature, values("custom-heap", "custom-panic", "anchor-debug"))',
+] }
+
+[lints.clippy]
+# Pre-existing style lints that newer clippy flags. Fixing them in source
+# would shift line numbers that Anchor embeds in error logs, so the source
+# would stop reproducing the deployed mainnet binary. Clean up at the next
+# program upgrade, then drop these.
+doc_lazy_continuation = "allow"
+items_after_test_module = "allow"
+too_many_arguments = "allow"
